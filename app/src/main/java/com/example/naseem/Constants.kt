@@ -1,0 +1,27 @@
+package com.example.naseem
+
+object Constants {
+    val BottomNavItems = listOf(
+        BottomNavItem(
+            label = "Home",
+            icon = R.drawable.ic_home,
+            route = "home"
+        ),
+        BottomNavItem(
+            label = "Explore",
+            icon = R.drawable.ic_explore,
+            route = "explore"
+        ),
+        BottomNavItem(
+            label = "Favorite",
+            icon = R.drawable.ic_fav,
+            route = "favorite"
+        )
+        ,
+        BottomNavItem(
+            label = "Settings",
+            icon = R.drawable.ic_settings,
+            route = "settings"
+        )
+    )
+}

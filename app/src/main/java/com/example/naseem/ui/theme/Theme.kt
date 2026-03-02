@@ -21,16 +21,30 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+)
+private val ExtremeHotColors = lightColorScheme(
+    primary = ExtremeHotPrimary,
+    secondary = ExtremeHotSecondary
+)
+private val HotColors = lightColorScheme(
+    primary = HotPrimary,
+    secondary = HotSecondary
+)
+private val WarmColors = lightColorScheme(
+    primary = WarmPrimary,
+    secondary = WarmSecondary
+)
+private val MildColors = lightColorScheme(
+    primary = MildPrimary,
+    secondary = MildSecondary
+)
+private val ColdColors = lightColorScheme(
+    primary = ColdPrimary,
+    secondary = ColdSecondary
+)
+private val ExtremeColdColors = lightColorScheme(
+    primary = ExtremeColdPrimary,
+    secondary = ExtremeColdSecondary
 )
 
 @Composable
