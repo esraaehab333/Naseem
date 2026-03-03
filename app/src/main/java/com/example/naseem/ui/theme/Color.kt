@@ -12,6 +12,7 @@ val Pink40 = Color(0xFF7D5260)
 
 val White100 = Color(0xFFFFFFFF)
 val Black100 = Color(0xFF000000)
+val Gray100 = Color(0xFF94A3B8)
 
 
 // Custom Temperature Colors
