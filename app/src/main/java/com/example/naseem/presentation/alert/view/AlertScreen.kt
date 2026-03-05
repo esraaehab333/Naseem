@@ -1,20 +1,26 @@
-package com.example.naseem
+package com.example.naseem.presentation.alert.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.naseem.presentation.home.view.HomeScreen
+import com.example.naseem.ui.theme.MildPrimary
+import com.example.naseem.ui.theme.NaseemTheme
 
 @Composable
-fun ExploreScreen() {
+fun AlertScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -23,9 +29,16 @@ fun ExploreScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            imageVector = Icons.Default.Home,
-            contentDescription = "Home",
+            imageVector = Icons.Default.Notifications,
+            contentDescription = "Alert",
         )
-        Text(text = "Home", color = Color.Black)
+        Text(text = "Alert", color = Color.Black)
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun AlertScreenPreview() {
+    NaseemTheme {
+        AlertScreen()
     }
 }
