@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.example.naseem.home.componets.BottomNavigationBar
+import com.example.naseem.presentation.home.componets.BottomNavigationBar
 import com.example.naseem.nav.NavHostContainer
 import com.example.naseem.ui.theme.MildPrimary
 import com.example.naseem.ui.theme.NaseemTheme

@@ -1,4 +1,4 @@
-package com.example.naseem.home.screens
+package com.example.naseem.presentation.home.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,9 +9,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.naseem.R
-import com.example.naseem.home.componets.TodayForecastWeather
-import com.example.naseem.home.componets.WeatherDetailsCard
-import com.example.naseem.home.componets.WeatherHeaderSection
+import com.example.naseem.presentation.home.componets.TodayForecastWeather
+import com.example.naseem.presentation.home.componets.WeatherDetailsCard
+import com.example.naseem.presentation.home.componets.WeatherHeaderSection
 import com.example.naseem.ui.theme.MildPrimary
 import com.example.naseem.ui.theme.NaseemTheme
 import com.example.naseem.ui.theme.White100

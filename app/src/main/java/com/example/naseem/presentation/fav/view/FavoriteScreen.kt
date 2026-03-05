@@ -1,4 +1,4 @@
-package com.example.naseem.fav
+package com.example.naseem.presentation.fav.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

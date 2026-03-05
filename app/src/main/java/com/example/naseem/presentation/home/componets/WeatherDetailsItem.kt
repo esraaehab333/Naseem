@@ -1,4 +1,4 @@
-package com.example.naseem.home.componets
+package com.example.naseem.presentation.home.componets
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
