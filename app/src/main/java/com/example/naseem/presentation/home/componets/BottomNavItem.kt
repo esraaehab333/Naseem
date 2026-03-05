@@ -1,4 +1,4 @@
-package com.example.naseem
+package com.example.naseem.presentation.home.componets
 
 data class BottomNavItem (
     val label: String,

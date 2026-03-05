@@ -1,4 +1,7 @@
-package com.example.naseem
+package com.example.naseem.utils
+
+import com.example.naseem.presentation.home.componets.BottomNavItem
+import com.example.naseem.R
 
 object Constants {
     val BottomNavItems = listOf(

@@ -1,4 +1,4 @@
-package com.example.naseem
+package com.example.naseem.utils
 
 object Routes {
     const val HOME = "home"
