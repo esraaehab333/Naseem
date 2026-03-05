@@ -9,7 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.naseem.presentation.fav.view.FavoriteScreen
-import com.example.naseem.SettingsScreen
+import com.example.naseem.presentation.settings.view.SettingsScreen
 import com.example.naseem.presentation.alert.view.AlertScreen
 import com.example.naseem.presentation.home.view.HomeScreen
 import com.example.naseem.utils.Routes
