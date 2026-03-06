@@ -11,9 +11,9 @@ object Constants {
             route = "home"
         ),
         BottomNavItem(
-            label = "Explore",
-            icon = R.drawable.ic_explore,
-            route = "explore"
+            label = "Alerts",
+            icon = R.drawable.ic_alert,
+            route = "alert"
         ),
         BottomNavItem(
             label = "Favorite",
