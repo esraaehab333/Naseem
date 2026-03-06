@@ -1,0 +1,71 @@
+package com.example.naseem.presentation.settings.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.naseem.R
+import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
+import com.example.naseem.ui.theme.White100
+
+@Composable
+fun LanguageSection(
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    var isArabic by remember { mutableStateOf(false) }
+
+    Column(modifier = modifier) {
+        Text(
+            text = "LANGUAGE",
+            style = TextStyle(
+                fontFamily = PlusJakartaSansFontFamily,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 12.sp,
+                color = Color.Gray,
+                letterSpacing = 1.sp
+            )
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            color = Color.White,
+            shadowElevation = 1.dp
+        ) {
+            SettingsRow(
+                color = color,
+                icon = R.drawable.ic_fav,
+                title = if (isArabic) "العربية" else "English (US)",
+                trailingContent = {
+                    Switch(
+                        checked = isArabic,
+                        onCheckedChange = { isArabic = it },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = White100,
+                            checkedTrackColor = color,
+                        )
+                    )
+                }
+            )
+        }
+    }
+}
