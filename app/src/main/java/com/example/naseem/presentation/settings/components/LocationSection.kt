@@ -39,7 +39,6 @@ fun LocationSection(color: Color){
         letterSpacing = 1.sp
     )
     Spacer(modifier = Modifier.height(12.dp))
-
     Surface(
         shape = RoundedCornerShape(18.dp),
         color = White100,

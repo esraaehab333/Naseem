@@ -18,6 +18,7 @@ import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.HotPrimary
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
+import com.example.naseem.presentation.settings.components.TemperatureAndWindSpeedSection
 
 @Composable
 fun SettingsScreen() {
@@ -27,6 +28,7 @@ fun SettingsScreen() {
             .background(White100)
             .padding(24.dp)
     ) {
+        Spacer(modifier = Modifier.height(32.dp))
         Text(
             text = "Settings",
             fontFamily = PlusJakartaSansFontFamily,
@@ -34,8 +36,11 @@ fun SettingsScreen() {
             color = Black100,
             fontSize = 18.sp
         )
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(25.dp))
         LocationSection(color= HotPrimary)
+        Spacer(modifier = Modifier.height(32.dp))
+        TemperatureAndWindSpeedSection(color = HotPrimary)
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 @Preview(showBackground = true)
