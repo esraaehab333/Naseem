@@ -1,5 +1,6 @@
 package com.example.naseem.nav
 
+import Next7DaysScreen
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ fun NavHostContainer(
     navController: NavHostController,
     padding: PaddingValues,
     color: Color,
+    image:Int,
     viewModel: HomeViewModel
 ) {
     NavHost(
@@ -27,8 +29,14 @@ fun NavHostContainer(
         startDestination = Routes.HOME,
         modifier = Modifier.padding(paddingValues = padding),
         builder = {
-            composable("home") {
-                HomeScreen(color = color, viewModel = viewModel)
+            composable(Routes.HOME) {
+                HomeScreen(
+                    color = color,
+                    viewModel = viewModel,
+                    image = image,
+                    onNext7DaysClick = {
+                        navController.navigate(Routes.NEXT7DAYS)
+                    })
             }
             composable(Routes.ALERT) {
                 AlertScreen()
@@ -38,6 +46,12 @@ fun NavHostContainer(
             }
             composable(Routes.SETTINGS) {
                 SettingsScreen(color=color)
+            }
+            composable(Routes.NEXT7DAYS) {
+                Next7DaysScreen(color=color,
+                    onBackButtonClick = {
+                        navController.popBackStack()
+                    })
             }
         })
 }

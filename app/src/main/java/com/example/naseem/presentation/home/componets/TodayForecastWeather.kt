@@ -23,7 +23,7 @@ import com.example.naseem.R
 
 
 @Composable
-fun TodayForecastWeather(modifier: Modifier = Modifier, color: Color) {
+fun TodayForecastWeather(modifier: Modifier = Modifier, color: Color,onNext7DaysClick: () -> Unit) {
     var selectedTab by remember { mutableStateOf(0) }
 
     Column(
@@ -53,7 +53,8 @@ fun TodayForecastWeather(modifier: Modifier = Modifier, color: Color) {
                     color = color
                 )
             }
-            Next7DaysForecastButton(modifier, color)
+            Next7DaysForecastButton(modifier, color,
+                onNext7DaysClick = onNext7DaysClick)
         }
 
         Spacer(modifier = Modifier.height(20.dp))
