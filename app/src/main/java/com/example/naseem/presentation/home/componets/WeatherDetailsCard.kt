@@ -16,7 +16,13 @@ import androidx.compose.ui.unit.dp
 import com.example.naseem.R
 
 @Composable
-fun WeatherDetailsCard(modifier: Modifier = Modifier , color:Color){
+fun WeatherDetailsCard(
+    modifier: Modifier = Modifier,
+    color:Color,
+    windSpeed:String,
+    humidity:String,
+    clouds:String,
+    pressure:String){
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -33,25 +39,26 @@ fun WeatherDetailsCard(modifier: Modifier = Modifier , color:Color){
             WeatherDetailItem(
                 iconRes = R.drawable.ic_humidity,
                 label = "Humidity",
-                value = "85%",
+                value = humidity,
                 color = color
             )
             WeatherDetailItem(
                 iconRes = R.drawable.ic_wind,
                 label = "Wind",
-                value = "9 km/h",
+                value = windSpeed,
                 color = color
             )
             WeatherDetailItem(
                 iconRes = R.drawable.ic_cloudy,
                 label = "Cloudy",
-                value = "Overcast",
+                value = clouds,
                 color = color
             )
+            //TODO:Icon here change it
             WeatherDetailItem(
                 iconRes = R.drawable.ic_pressure,
-                label = "Humidity",
-                value = "85%",
+                label = "Pressure",
+                value = pressure,
                 color = color
             )
         }
