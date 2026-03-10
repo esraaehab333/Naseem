@@ -2,11 +2,13 @@ package com.example.naseem.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Sys(
+data class SysWeather(
     @SerializedName("country")
     val country: String?,
+
     @SerializedName("sunrise")
     val sunrise: Long?,
+
     @SerializedName("sunset")
     val sunset: Long?
 )

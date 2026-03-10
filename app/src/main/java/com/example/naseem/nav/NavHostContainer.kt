@@ -49,6 +49,7 @@ fun NavHostContainer(
             }
             composable(Routes.NEXT7DAYS) {
                 Next7DaysScreen(color=color,
+                    viewModel = viewModel,
                     onBackButtonClick = {
                         navController.popBackStack()
                     })

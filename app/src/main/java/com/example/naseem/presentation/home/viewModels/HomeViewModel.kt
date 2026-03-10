@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.naseem.common.ApiState
 import com.example.naseem.data.datasource.WeatherRepository
+import com.example.naseem.data.model.ForecastResponse
 import com.example.naseem.data.model.WeatherResponse
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +26,9 @@ class HomeViewModel(
     private val _weatherData = MutableStateFlow<WeatherResponse?>(null)
     val weatherData: StateFlow<WeatherResponse?> = _weatherData
 
+    private val _forecastData = MutableStateFlow<ForecastResponse?>(null)
+    val forecastData: StateFlow<ForecastResponse?> = _forecastData
+
     private val _errorMessage = MutableSharedFlow<String>()
     val errorMessage: SharedFlow<String> = _errorMessage
 
@@ -38,6 +42,23 @@ class HomeViewModel(
                 }
                 is ApiState.Failure -> {
                     _errorMessage.emit(result.msg.message ?: "Unknown Error occurred")
+                }
+                else -> {}
+            }
+            _isLoading.value = false
+        }
+    }
+    fun getFiveDayForecast(lat: Double, lon: Double, apiKey: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            val result = weatherRepository.getFiveDayForecast(lat, lon, apiKey)
+
+            when (result) {
+                is ApiState.Success -> {
+                    _forecastData.value = result.data
+                }
+                is ApiState.Failure -> {
+                    _errorMessage.emit(result.msg.message ?: "Unknown Error")
                 }
                 else -> {}
             }

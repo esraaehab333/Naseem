@@ -17,7 +17,6 @@ import com.example.naseem.nav.NavHostContainer
 import com.example.naseem.presentation.home.componets.BottomNavigationBar
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
 import com.example.naseem.presentation.home.viewModels.HomeViewModelFactory
-import com.example.naseem.ui.theme.MildPrimary
 import com.example.naseem.ui.theme.NaseemTheme
 import com.example.naseem.utils.Routes
 import com.example.naseem.utils.getThemeConfig
@@ -31,7 +30,7 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
             val viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory(context))
             val weatherData by viewModel.weatherData.collectAsState()
-            val currentTemp = weatherData?.main?.temp ?: 20.0
+            val currentTemp = weatherData?.main?.temp?: 20.0
             val dynamicColor = getThemeConfig(currentTemp)
 
             NaseemTheme(dynamicColor = false, darkTheme = false) {

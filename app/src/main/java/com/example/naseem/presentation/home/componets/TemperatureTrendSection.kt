@@ -25,7 +25,7 @@ import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 
 @Composable
-fun TemperatureTrendSection(highTemps: List<Int>, color: Color) {
+fun TemperatureTrendSection(highTemps: List<Int>, color: Color ,lowTemps: List<Int> ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -59,7 +59,7 @@ fun TemperatureTrendSection(highTemps: List<Int>, color: Color) {
                                 fontSize = 28.sp,
                                 fontFamily = PlusJakartaSansFontFamily
                             )
-                            ) { append("/ 58°") }
+                            ) { append("/ ${lowTemps.firstOrNull()}° ") }
                         }
                     )
                 }
