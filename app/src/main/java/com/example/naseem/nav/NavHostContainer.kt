@@ -12,30 +12,32 @@ import com.example.naseem.presentation.fav.view.FavoriteScreen
 import com.example.naseem.presentation.settings.view.SettingsScreen
 import com.example.naseem.presentation.alert.view.AlertScreen
 import com.example.naseem.presentation.home.view.HomeScreen
+import com.example.naseem.presentation.home.viewModels.HomeViewModel
 import com.example.naseem.utils.Routes
 
 @Composable
 fun NavHostContainer(
     navController: NavHostController,
     padding: PaddingValues,
-    color: Color
+    color: Color,
+    viewModel: HomeViewModel
 ) {
     NavHost(
         navController = navController,
         startDestination = Routes.HOME,
         modifier = Modifier.padding(paddingValues = padding),
         builder = {
-            composable(Routes.HOME) {
-                HomeScreen(color = color)
+            composable("home") {
+                HomeScreen(color = color, viewModel = viewModel)
             }
-            composable(Routes.EXPLORE) {
+            composable(Routes.ALERT) {
                 AlertScreen()
             }
             composable(Routes.FAVORITE) {
                 FavoriteScreen()
             }
             composable(Routes.SETTINGS) {
-                SettingsScreen()
+                SettingsScreen(color=color)
             }
         })
 }

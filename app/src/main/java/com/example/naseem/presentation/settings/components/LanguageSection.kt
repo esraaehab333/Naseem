@@ -53,6 +53,7 @@ fun LanguageSection(
         ) {
             SettingsRow(
                 color = color,
+                //TODO: change the icon here too
                 icon = R.drawable.ic_fav,
                 title = if (isArabic) "العربية" else "English (US)",
                 trailingContent = {

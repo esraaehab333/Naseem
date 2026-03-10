@@ -1,8 +1,10 @@
 package com.example.naseem.utils
 
+import com.example.naseem.common.ApiState
+
 object Routes {
     const val HOME = "home"
-    const val EXPLORE = "alert"
+    const val ALERT = "alert"
     const val FAVORITE = "favorite"
     const val SETTINGS = "settings"
 }
