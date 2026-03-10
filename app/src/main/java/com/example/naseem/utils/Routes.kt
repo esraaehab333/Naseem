@@ -7,4 +7,5 @@ object Routes {
     const val ALERT = "alert"
     const val FAVORITE = "favorite"
     const val SETTINGS = "settings"
+    const val NEXT7DAYS = "next_7_days"
 }

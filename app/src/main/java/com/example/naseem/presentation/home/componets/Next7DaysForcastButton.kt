@@ -20,12 +20,12 @@ import androidx.compose.ui.unit.sp
 import com.example.naseem.R
 
 @Composable
-fun Next7DaysForecastButton(modifier: Modifier, color: Color){
+fun Next7DaysForecastButton(modifier: Modifier, color: Color,onNext7DaysClick: () -> Unit){
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(18.dp))
             .clickable {
-                println("Navigate to 7 days screen")
+               onNext7DaysClick()
             }
             .padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,

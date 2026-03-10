@@ -14,6 +14,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.naseem.ui.theme.Black100
+import com.example.naseem.ui.theme.Gray100
 
 @Composable
 fun WeatherDetailItem(iconRes: Int, label: String, value: String , color: Color) {
@@ -28,14 +30,14 @@ fun WeatherDetailItem(iconRes: Int, label: String, value: String , color: Color)
         )
         Text(
             text = label,
-            color = Color(0xFF7B8794),
+            color = Gray100,
             fontSize = 10.sp,
             fontWeight = FontWeight.Medium
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = value,
-            color = Color(0xFF1F2D3D),
+            color = Black100,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold
         )
