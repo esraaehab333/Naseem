@@ -1,20 +1,44 @@
 package com.example.naseem.data.model
 
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class WeatherResponse (
-    val coord: Coord,
-    val weather: List<Weather>,
-    val base: String,
-    val main: Main,
-    val visibility: Long,
-    val wind: Wind,
-    val clouds: Clouds,
-    val dt: Long,
-    val sys: Sys,
-    val timezone: Long,
-    val id: Long,
-    val name: String,
-    val cod: Long
+    @SerializedName("coord")
+    val coord: Coord?,
+
+    @SerializedName("weather")
+    val weather: List<Weather>?,
+
+    @SerializedName("base")
+    val base: String?,
+
+    @SerializedName("main")
+    val main: MainWeather?,
+
+    @SerializedName("visibility")
+    val visibility: Long?,
+
+    @SerializedName("wind")
+    val wind: Wind?,
+
+    @SerializedName("clouds")
+    val clouds: Clouds?,
+
+    @SerializedName("dt")
+    val dt: Long?,
+
+    @SerializedName("sys")
+    val sys: SysWeather?,
+
+    @SerializedName("timezone")
+    val timezone: Long?,
+
+    @SerializedName("id")
+    val id: Long?,
+
+    @SerializedName("name")
+    val name: String?,
+
+    @SerializedName("cod")
+    val cod: Long?
 )

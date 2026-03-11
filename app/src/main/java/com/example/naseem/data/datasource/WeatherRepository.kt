@@ -6,6 +6,7 @@ import com.example.naseem.data.datasource.local.FavWeatherLocalDataSource
 import com.example.naseem.data.datasource.remote.WeatherRemoteDataSource
 import com.example.naseem.data.model.WeatherResponse
 import com.example.naseem.data.entity.WeatherEntity
+import com.example.naseem.data.model.ForecastResponse
 import kotlinx.coroutines.flow.Flow
 
 class WeatherRepository(context: Context) {
@@ -14,6 +15,10 @@ class WeatherRepository(context: Context) {
 
     suspend fun getCurrentWeather(lat: Double, lon: Double, apiKey: String): ApiState<WeatherResponse> {
         return remoteDataSource.getCurrentWeather(lat, lon, apiKey)
+    }
+
+    suspend fun getFiveDayForecast(lat: Double, lon: Double, apiKey: String): ApiState<ForecastResponse> {
+        return remoteDataSource.getFiveDayForecast(lat, lon, apiKey)
     }
 
     suspend fun insertWeatherToFav(weather: WeatherEntity) {

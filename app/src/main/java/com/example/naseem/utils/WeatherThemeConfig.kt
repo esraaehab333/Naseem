@@ -31,3 +31,19 @@ fun formatUnixTimestamp(timestamp: Long): String {
     val date = java.util.Date(timestamp * 1000)
     return sdf.format(date)
 }
+fun formatUnixToDay(timestamp: Long): String {
+    val sdf = java.text.SimpleDateFormat("EEEE", java.util.Locale.getDefault())
+    return sdf.format(java.util.Date(timestamp * 1000))
+}
+fun getWeatherIcon(iconCode: String?): Int {
+    return when (iconCode) {
+        "01d" -> R.drawable.ic_sunny
+        "01n" -> R.drawable.ic_clear
+        "02d", "02n", "03d", "03n", "04d", "04n" -> R.drawable.ic_cloudy
+        "09d", "09n", "10d", "10n" -> R.drawable.ic_rainy
+        "11d", "11n" -> R.drawable.ic_thunderstorm
+        "13d", "13n" -> R.drawable.ic_snowy
+        "50d", "50n" -> R.drawable.ic_fog
+        else -> R.drawable.ic_cloudy
+    }
+}

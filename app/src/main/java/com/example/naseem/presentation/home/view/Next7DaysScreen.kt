@@ -7,36 +7,40 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.naseem.R
 import com.example.naseem.presentation.home.componets.DailyForecastRow
 import com.example.naseem.presentation.home.componets.ForecastDay
 import com.example.naseem.presentation.home.componets.TemperatureTrendSection
-import com.example.naseem.ui.theme.Black100
+import com.example.naseem.presentation.home.viewModels.HomeViewModel
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
+import com.example.naseem.utils.formatUnixToDay
+import com.example.naseem.utils.getWeatherIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Next7DaysScreen(color: Color , onBackButtonClick: () -> Unit) {
-    val weeklyData = listOf(
-        ForecastDay("Monday", "Sunny", 72, 60, Icons.Default.Star),
-        ForecastDay("Tuesday", "Partly Cloudy", 68, 58, Icons.Default.Star),
-        ForecastDay("Wednesday", "Light Rain", 64, 55, Icons.Default.Star),
-        ForecastDay("Thursday", "Overcast", 62, 52, Icons.Default.Star),
-        ForecastDay("Friday", "Sunny", 74, 59, Icons.Default.Star),
-        ForecastDay("Saturday", "Sunny", 75, 61, Icons.Default.Star),
-        ForecastDay("Sunday", "Cloudy", 70, 58, Icons.Default.Star)
-    )
-    val highTemps = weeklyData.map { it.high }
+fun Next7DaysScreen(color: Color, viewModel: HomeViewModel, onBackButtonClick: () -> Unit) {
+    val forecastData by viewModel.forecastData.collectAsState()
+    val dailyList = forecastData?.list?.filter {
+        it.dtTxt?.contains("12:00:00") == true
+    } ?: emptyList()
+    val highTemps = dailyList.map { it.main?.tempMax?.toInt() ?: 0 }
+    val lowTemps = dailyList.map { it.main?.tempMin?.toInt() ?: 0 }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("7-Day Forecast", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
+                title = {
+                    Text("5-Day Forecast",
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = PlusJakartaSansFontFamily,
+                        fontSize = 18.sp)},
                 navigationIcon = {
                     IconButton(onClick = onBackButtonClick) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -49,24 +53,44 @@ fun Next7DaysScreen(color: Color , onBackButtonClick: () -> Unit) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(White100),
-            contentPadding = innerPadding // مرري الـ object نفسه مباشرة هنا
+                .padding(innerPadding)
+                .background(White100)
         ) {
             item {
-                TemperatureTrendSection(highTemps = highTemps, color = color)
+                if (highTemps.isNotEmpty()) {
+                    TemperatureTrendSection(
+                        highTemps = highTemps,
+                        lowTemps= lowTemps,
+                        color = color
+                    )
+                }
             }
             item {
                 Text(
-                    text = "Daily Forecast",
+                    "Daily Forecast",
                     modifier = Modifier.padding(20.dp),
-                    color = Black100,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
                     fontFamily = PlusJakartaSansFontFamily
                 )
             }
-            items(weeklyData) { day ->
-                DailyForecastRow(day, color = color , icon = R.drawable.ic_pressure)
+            items(dailyList) { day ->
+                val weatherInfo = day.weather?.firstOrNull()
+                val iconRes = getWeatherIcon(weatherInfo?.icon)
+                val highTemp = day.main?.tempMax?.toInt() ?: 0
+                val lowTemp = day.main?.tempMin?.toInt() ?: 0
+
+                DailyForecastRow(
+                    data = ForecastDay(
+                        dayName = formatUnixToDay(day.dt ?: 0L),
+                        high = highTemp,
+                        low = lowTemp,
+                        icon = Icons.Default.Star,
+                        color = color,
+                        status = weatherInfo?.main ?: "Clear",
+                    ),
+                    color = color,
+                    icon = iconRes
+                )
             }
         }
     }

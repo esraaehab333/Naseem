@@ -2,7 +2,6 @@ package com.example.naseem.presentation.home.componets
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,78 +10,49 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.naseem.R
+import com.example.naseem.data.model.ForecastResponse
+import com.example.naseem.utils.getWeatherIcon
 
 
 @Composable
-fun TodayForecastWeather(modifier: Modifier = Modifier, color: Color,onNext7DaysClick: () -> Unit) {
+fun TodayForecastWeather(color: Color, forecastData: ForecastResponse?, onNext7DaysClick: () -> Unit) {
     var selectedTab by remember { mutableStateOf(0) }
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 18.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(verticalAlignment = Alignment.Bottom) {
-                HomeTabButton(
-                    text = "Today",
-                    isSelected = selectedTab == 0,
-                    onClick = { selectedTab = 0},
-                    color = color
-                )
-
+    val todayList = forecastData?.list?.take(8) ?: emptyList()
+    val tomorrowList = forecastData?.list?.slice(8..15) ?: emptyList()
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp)) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row {
+                HomeTabButton("Today", selectedTab == 0, { selectedTab = 0 }, color)
                 Spacer(modifier = Modifier.width(20.dp))
-
-                HomeTabButton(
-                    text = "Tomorrow",
-                    isSelected = selectedTab == 1,
-                    onClick = { selectedTab = 1 },
-                    color = color
-                )
+                HomeTabButton("Tomorrow", selectedTab == 1, { selectedTab = 1 }, color)
             }
-            Next7DaysForecastButton(modifier, color,
-                onNext7DaysClick = onNext7DaysClick)
+            Next7DaysForecastButton(Modifier, color, onNext7DaysClick)
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(bottom = 10.dp)
-        ) {
-            if (selectedTab == 0) {
-                items(12) { index ->
-                    ForecastItem(
-                        time = "${(22 + index) % 24}:00",
-                        icon = R.drawable.ic_cloudy,
-                        temp = "${19 - index}°",
-                        isSelected = index == 0,
-                        color = color
-                    )
-                }
-            } else {
-                items(12) { index ->
-                    ForecastItem(
-                        time = "${index}:00",
-                        icon = R.drawable.ic_cloudy,
-                        temp = "${15 + index}°",
-                        isSelected = false,
-                        color = color
-                    )
-                }
+
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            val listToDisplay = if (selectedTab == 0) todayList else tomorrowList
+            items(listToDisplay) { item ->
+                val iconCode = item.weather?.firstOrNull()?.icon
+                val displayTime = item.dtTxt?.let { text ->
+                    if (text.length >= 16) text.substring(11, 16) else text
+                } ?: "--:--"
+                ForecastItem(
+                    time = displayTime,
+                    icon = getWeatherIcon(iconCode),
+                    temp = "${item.main?.temp?.toInt() ?: 0}",
+                    isSelected = false,
+                    color = color
+                )
             }
         }
     }
