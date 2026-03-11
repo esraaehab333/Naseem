@@ -1,5 +1,6 @@
 package com.example.naseem.nav
 
+import FavoriteScreen
 import Next7DaysScreen
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -9,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.naseem.presentation.fav.view.FavoriteScreen
 import com.example.naseem.presentation.settings.view.SettingsScreen
 import com.example.naseem.presentation.alert.view.AlertScreen
 import com.example.naseem.presentation.home.view.HomeScreen
@@ -42,7 +42,7 @@ fun NavHostContainer(
                 AlertScreen()
             }
             composable(Routes.FAVORITE) {
-                FavoriteScreen()
+                FavoriteScreen(color=color)
             }
             composable(Routes.SETTINGS) {
                 SettingsScreen(color=color)
