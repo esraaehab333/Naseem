@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.naseem.common.ApiState
 import com.example.naseem.data.datasource.WeatherRepository
-import com.example.naseem.presentation.fav.components.FavoriteModel
+import com.example.naseem.data.model.FavoriteModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -35,7 +35,7 @@ class FavoriteViewModel(
                     _favoritesState.value = ApiState.Failure(e)
                 }
                 .map { list ->
-                    list.map {FavoriteModel(it) }
+                    list.map { FavoriteModel(it) }
                 }
                 .collect { models ->
                     _favoritesState.value = ApiState.Success(models)

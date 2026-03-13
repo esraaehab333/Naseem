@@ -5,8 +5,8 @@ import com.example.naseem.common.ApiState
 import com.example.naseem.data.datasource.local.FavWeatherLocalDataSource
 import com.example.naseem.data.datasource.remote.WeatherRemoteDataSource
 import com.example.naseem.data.entity.FavoriteEntity
-import com.example.naseem.data.model.WeatherResponse
-import com.example.naseem.data.model.ForecastResponse
+import com.example.naseem.data.dto.WeatherResponse
+import com.example.naseem.data.dto.ForecastResponse
 import kotlinx.coroutines.flow.Flow
 
 class WeatherRepository(context: Context) {

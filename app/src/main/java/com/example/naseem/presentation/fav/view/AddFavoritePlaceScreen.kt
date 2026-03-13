@@ -1,20 +1,27 @@
 package com.example.naseem.presentation.fav.view
 
-import ButtonRow
+import android.content.Context.MODE_PRIVATE
+import android.location.Address
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.naseem.presentation.fav.components.AddFavoriteHandler
-import com.example.naseem.presentation.fav.components.AddFavoriteState
+import com.example.naseem.data.model.FavoriteModel
+import com.example.naseem.presentation.fav.components.BottomSheetSection
+import com.example.naseem.presentation.fav.components.LocationFloatingActionButton
 import com.example.naseem.presentation.fav.components.MapSection
 import com.example.naseem.presentation.fav.components.SearchSection
 import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel
-import kotlinx.coroutines.launch
+import com.example.naseem.utils.LocationUtils
+import com.google.android.gms.location.LocationServices
 import org.osmdroid.config.Configuration
+import org.osmdroid.util.GeoPoint
 
 @Composable
 fun AddFavoritePlaceScreen(
@@ -23,87 +30,124 @@ fun AddFavoritePlaceScreen(
     onNavigateBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    val state = remember { AddFavoriteState() }
-
-    val fusedLocationClient = remember {
-        com.google.android.gms.location.LocationServices.getFusedLocationProviderClient(context)
-    }
-
-    val handler = remember {
-        AddFavoriteHandler(context, state, viewModel, fusedLocationClient)
-    }
-
-    // إعداد الـ Map و جيب الـ current location
+    var searchQuery by remember { mutableStateOf("") }
+    var suggestions by remember { mutableStateOf<List<Address>>(emptyList()) }
+    var selectedLocation by remember { mutableStateOf<GeoPoint?>(null) }
+    var selectedAddress by remember { mutableStateOf<Address?>(null) }
+    var mapCenter by remember { mutableStateOf<GeoPoint?>(null) }
+    var currentLocation by remember { mutableStateOf<GeoPoint?>(null) }
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+    val isSheetVisible = selectedLocation != null && !imeVisible
     LaunchedEffect(Unit) {
         Configuration.getInstance().apply {
             userAgentValue = context.packageName
-            load(context, context.getSharedPreferences("osmdroid", android.content.Context.MODE_PRIVATE))
+            load(context, context.getSharedPreferences("osmdroid",MODE_PRIVATE))
         }
-        handler.fetchCurrentLocation()
-    }
-
-    // لما الـ selectedLocation يتغير → Reverse Geocoding
-    LaunchedEffect(state.selectedLocation) {
-        state.selectedLocation?.let { handler.onLocationChanged(it) }
-    }
-
-    // مراقبة الـ addEvent
-    LaunchedEffect(Unit) {
-        viewModel.addEvent.collect { message ->
-            snackbarHostState.showSnackbar(message)
-            onNavigateBack()
+        LocationUtils.getCurrentLocation(context, fusedLocationClient) { point ->
+            currentLocation = point
+            mapCenter = point
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = Color.Transparent
-    ) { innerPadding ->
+    LaunchedEffect(selectedLocation) {
+        selectedLocation?.let { location ->
+            LocationUtils.getAddressFromLocation(context, location) { address ->
+                selectedAddress = address
+            }
+        }
+    }
+    Scaffold(containerColor = Color.Transparent) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // الـ Map
             MapSection(
                 modifier = Modifier.fillMaxSize(),
-                mapCenter = state.mapCenter,
-                selectedLocation = state.selectedLocation
+                mapCenter = mapCenter,
+                currentLocation = currentLocation,
+                selectedLocation = selectedLocation,
+                onLocationSelected = { point ->
+                    selectedLocation = point
+                    mapCenter = point
+                }
             )
-
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 60.dp, start = 20.dp, end = 20.dp)
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, start = 20.dp, end = 20.dp)
             ) {
-                // الـ Search
                 SearchSection(
-                    searchQuery = state.searchQuery,
-                    suggestions = state.suggestions,
+                    searchQuery = searchQuery,
+                    suggestions = suggestions,
                     color = color,
-                    onQueryChange = { handler.onSearchQueryChanged(it) },
-                    onSuggestionClick = { handler.onSuggestionSelected(it) }
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                // الـ Buttons
-                ButtonRow(
-                    color = color,
-                    onGetCurrentLocation = { handler.onGetCurrentLocation() },
-                    onSaveClick = {
-                        handler.onSaveClick(
-                            onNoLocationSelected = {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Please select a location first")
-                                }
+                    onQueryChange = { query ->
+                        searchQuery = query
+                        if (query.length > 2) {
+                            LocationUtils.searchAddress(context, query) { results ->
+                                suggestions = results
                             }
-                        )
+                        } else {
+                            suggestions = emptyList()
+                        }
+                    },
+                    onSuggestionClick = { address ->
+                        val point = GeoPoint(address.latitude, address.longitude)
+                        selectedLocation = point
+                        selectedAddress = address
+                        mapCenter = point
+                        searchQuery = ""
+                        suggestions = emptyList()
                     }
                 )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 16.dp, bottom = 12.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    LocationFloatingActionButton(
+                        color=color,
+                        onClick = {
+                            LocationUtils.getCurrentLocation(context, fusedLocationClient) { point ->
+                                currentLocation = point
+                                selectedLocation = point
+                                mapCenter = point
+                            }
+                        }
+                    )
+                }
+                AnimatedVisibility(
+                    visible = isSheetVisible
+                ) {
+                    BottomSheetSection(
+                        color = color,
+                        selectedAddress = selectedAddress,
+                        selectedLocation = selectedLocation,
+                        onSaveClick = {
+                            val location = selectedLocation
+                            if (location != null) {
+                                viewModel.addToFavorites(
+                                    FavoriteModel(
+                                        cityName = selectedAddress?.locality ?: "Unknown Location",
+                                        fullAddress = selectedAddress?.getAddressLine(0)
+                                            ?: "${location.latitude}, ${location.longitude}",
+                                        latitude = location.latitude,
+                                        longitude = location.longitude
+                                    )
+                                )
+                                onNavigateBack()
+                            }
+                        }
+                    )
+                }
             }
         }
     }

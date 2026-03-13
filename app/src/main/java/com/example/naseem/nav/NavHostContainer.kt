@@ -63,7 +63,7 @@ fun NavHostContainer(
                     })
             }
             composable(Routes.ADDFAVORITEPLACE) {
-                AddFavoritePlaceScreen(color=color , favoriteViewModel ,
+                AddFavoritePlaceScreen(color=color , viewModel =favoriteViewModel ,
                     onNavigateBack = {
                     navController.popBackStack()
                 })

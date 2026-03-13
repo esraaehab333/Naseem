@@ -1,8 +1,8 @@
 package com.example.naseem.data.datasource.remote
 
 import com.example.naseem.common.ApiState
-import com.example.naseem.data.model.ForecastResponse
-import com.example.naseem.data.model.WeatherResponse
+import com.example.naseem.data.dto.ForecastResponse
+import com.example.naseem.data.dto.WeatherResponse
 import com.example.naseem.data.network.RetrofitHelper
 import java.io.IOException
 

@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.naseem.common.ApiState
 import com.example.naseem.data.datasource.WeatherRepository
-import com.example.naseem.data.model.ForecastResponse
-import com.example.naseem.data.model.WeatherResponse
+import com.example.naseem.data.dto.ForecastResponse
+import com.example.naseem.data.dto.WeatherResponse
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
