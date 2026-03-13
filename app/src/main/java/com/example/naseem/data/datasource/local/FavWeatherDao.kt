@@ -5,17 +5,17 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.naseem.data.entity.WeatherEntity
+import com.example.naseem.data.entity.FavoriteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavWeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavWeather(weather: WeatherEntity)
+    suspend fun insertFavWeather(favorite: FavoriteEntity)
 
     @Delete
-    suspend fun deleteFavWeather(weather: WeatherEntity)
+    suspend fun deleteFavWeather(favorite: FavoriteEntity)
 
-    @Query("SELECT * FROM weather")
-    fun getAllFavWeathers(): Flow<List<WeatherEntity>>
+    @Query("SELECT * FROM favorite")
+    fun getAllFavWeathers(): Flow<List<FavoriteEntity>>
 }
