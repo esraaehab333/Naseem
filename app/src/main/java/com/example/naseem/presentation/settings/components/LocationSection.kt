@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,27 +31,34 @@ import com.example.naseem.ui.theme.White100
 
 @Composable
 fun LocationSection(color: Color){
+
     Text(
-        text = "LOCATION",
+        text = stringResource(R.string.location),
         fontFamily = PlusJakartaSansFontFamily,
         fontWeight = FontWeight.SemiBold,
         color = Gray100,
         fontSize = 12.sp,
         letterSpacing = 1.sp
     )
+
     Spacer(modifier = Modifier.height(12.dp))
+
     Surface(
         shape = RoundedCornerShape(18.dp),
         color = White100,
         shadowElevation = 1.1.dp,
     ) {
+
         Column {
+
             SettingsRow(
-                color=color,
+                color = color,
                 icon = R.drawable.ic_gps,
-                title = "Use GPS",
+                title = stringResource(R.string.use_gps),
                 trailingContent = {
+
                     var isChecked by remember { mutableStateOf(true) }
+
                     Switch(
                         checked = isChecked,
                         onCheckedChange = { isChecked = it },
@@ -71,7 +79,7 @@ fun LocationSection(color: Color){
             SettingsRow(
                 color = color,
                 icon = R.drawable.ic_map,
-                title = "Choose from map",
+                title = stringResource(R.string.choose_from_map),
                 trailingContent = {
                     Icon(
                         painter = painterResource(R.drawable.ic_arrow),

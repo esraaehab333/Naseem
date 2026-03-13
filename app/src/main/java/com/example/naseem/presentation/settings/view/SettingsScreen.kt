@@ -41,6 +41,7 @@ import com.example.naseem.ui.theme.NaseemTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.room.util.copy
@@ -66,7 +67,7 @@ fun SettingsScreen(color:Color) {
     ) {
         Spacer(modifier = Modifier.height(32.dp))
         Text(
-            text = "Settings",
+            text = stringResource(R.string.settings),
             fontFamily = PlusJakartaSansFontFamily,
             fontWeight = FontWeight.Bold,
             color = Black100,

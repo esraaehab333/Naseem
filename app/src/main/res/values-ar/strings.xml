@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">نسيم</string>
+    <string name="settings">الإعدادات</string>
+    <string name="units">الوحدات</string>
+    <string name="temperature">درجة الحرارة</string>
+    <string name="wind_speed">سرعة الرياح</string>
+    <string name="celsius">سيليزي</string>
+    <string name="fahrenheit">فهرنهايت</string>
+    <string name="kelvin">كلفن</string>
+    <string name="meter_per_sec">م/ث</string>
+    <string name="miles_per_hour">ميل/س</string>
+    <string name="location">الموقع</string>
+    <string name="use_gps">استخدام GPS</string>
+    <string name="choose_from_map">اختيار من الخريطة</string>
+    <string name="language">اللغة</string>
+    <string name="english_us">الإنجليزية (US)</string>
+    <string name="arabic">العربية</string>
+</resources>

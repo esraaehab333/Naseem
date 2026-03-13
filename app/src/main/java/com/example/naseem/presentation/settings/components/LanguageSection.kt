@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -33,7 +34,7 @@ fun LanguageSection(
 
     Column(modifier = modifier) {
         Text(
-            text = "LANGUAGE",
+            text = stringResource(R.string.language),
             style = TextStyle(
                 fontFamily = PlusJakartaSansFontFamily,
                 fontWeight = FontWeight.SemiBold,
@@ -53,9 +54,8 @@ fun LanguageSection(
         ) {
             SettingsRow(
                 color = color,
-                //TODO: change the icon here too
-                icon = R.drawable.ic_fav,
-                title = if (isArabic) "العربية" else "English (US)",
+                icon = R.drawable.ic_language,
+                title = if (isArabic) stringResource(R.string.arabic) else stringResource(R.string.english_us),
                 trailingContent = {
                     Switch(
                         checked = isArabic,
