@@ -14,6 +14,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.naseem.nav.NavHostContainer
+import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel
+import com.example.naseem.presentation.fav.viewModels.FavoriteViewModelFactory
 import com.example.naseem.presentation.home.componets.BottomNavigationBar
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
 import com.example.naseem.presentation.home.viewModels.HomeViewModelFactory
@@ -29,6 +31,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             val viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory(context))
+            val favoriteViewModel: FavoriteViewModel = viewModel(factory = FavoriteViewModelFactory(context))
             val weatherData by viewModel.weatherData.collectAsState()
             val currentTemp = weatherData?.main?.temp?: 20.0
             val dynamicColor = getThemeConfig(currentTemp)
@@ -41,7 +44,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     contentWindowInsets = WindowInsets(0, 0, 0, 0),
                     bottomBar = {
-                        if (currentRoute != Routes.NEXT7DAYS) {
+                        if (currentRoute != Routes.NEXT7DAYS && currentRoute != Routes.ADDFAVORITEPLACE) {
                             BottomNavigationBar(
                                 navController = navController,
                                 color = dynamicColor.color
@@ -54,6 +57,7 @@ class MainActivity : ComponentActivity() {
                         padding = padding,
                         color = dynamicColor.color,
                         viewModel = viewModel,
+                        favoriteViewModel = favoriteViewModel,
                         image = dynamicColor.imageRes
                     )
                 }

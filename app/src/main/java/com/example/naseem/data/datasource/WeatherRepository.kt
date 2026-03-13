@@ -4,8 +4,8 @@ import android.content.Context
 import com.example.naseem.common.ApiState
 import com.example.naseem.data.datasource.local.FavWeatherLocalDataSource
 import com.example.naseem.data.datasource.remote.WeatherRemoteDataSource
+import com.example.naseem.data.entity.FavoriteEntity
 import com.example.naseem.data.model.WeatherResponse
-import com.example.naseem.data.entity.WeatherEntity
 import com.example.naseem.data.model.ForecastResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -21,15 +21,15 @@ class WeatherRepository(context: Context) {
         return remoteDataSource.getFiveDayForecast(lat, lon, apiKey)
     }
 
-    suspend fun insertWeatherToFav(weather: WeatherEntity) {
-        localDataSource.insertFavWeather(weather)
+    suspend fun insertWeatherToFav(favorite: FavoriteEntity) {
+        localDataSource.insertFavWeather(favorite)
     }
 
-    suspend fun deleteWeatherFromFav(weather: WeatherEntity) {
-        localDataSource.deleteFavWeather(weather)
+    suspend fun deleteWeatherFromFav(favorite: FavoriteEntity) {
+        localDataSource.deleteFavWeather(favorite)
     }
 
-    fun getAllFavWeather(): Flow<List<WeatherEntity>> {
+    fun getAllFavWeather(): Flow<List<FavoriteEntity>> {
         return localDataSource.getAllFavWeather()
     }
 }

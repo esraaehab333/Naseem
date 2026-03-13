@@ -12,6 +12,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.naseem.presentation.settings.view.SettingsScreen
 import com.example.naseem.presentation.alert.view.AlertScreen
+import com.example.naseem.presentation.fav.view.AddFavoritePlaceScreen
+import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel
 import com.example.naseem.presentation.home.view.HomeScreen
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
 import com.example.naseem.utils.Routes
@@ -22,7 +24,8 @@ fun NavHostContainer(
     padding: PaddingValues,
     color: Color,
     image:Int,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    favoriteViewModel:FavoriteViewModel
 ) {
     NavHost(
         navController = navController,
@@ -42,7 +45,12 @@ fun NavHostContainer(
                 AlertScreen()
             }
             composable(Routes.FAVORITE) {
-                FavoriteScreen(color=color)
+                FavoriteScreen(
+                    color=color ,
+                    viewModel=favoriteViewModel,
+                    onFloatingActionButtonClicked = {
+                    navController.navigate(Routes.ADDFAVORITEPLACE)
+                    })
             }
             composable(Routes.SETTINGS) {
                 SettingsScreen(color=color)
@@ -53,6 +61,12 @@ fun NavHostContainer(
                     onBackButtonClick = {
                         navController.popBackStack()
                     })
+            }
+            composable(Routes.ADDFAVORITEPLACE) {
+                AddFavoritePlaceScreen(color=color , favoriteViewModel ,
+                    onNavigateBack = {
+                    navController.popBackStack()
+                })
             }
         })
 }
