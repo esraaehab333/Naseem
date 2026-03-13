@@ -1,4 +1,4 @@
-package com.example.naseem.data.model
+package com.example.naseem.data.dto
 
 import MainForecast
 import com.google.gson.annotations.SerializedName

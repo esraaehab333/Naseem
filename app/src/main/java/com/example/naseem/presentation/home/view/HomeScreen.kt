@@ -28,8 +28,8 @@ fun HomeScreen(
     val forecastData by viewModel.forecastData.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     LaunchedEffect(Unit) {
-        val lat = 90.0//30.0444
-        val lon = 0.0//31.2357
+        val lat = 30.0444
+        val lon = 31.2357
         val apiKey = "17616e217ee841a81fda302a8a2d12b6"
         viewModel.getCurrentWeather(lat, lon, apiKey)
         viewModel.getFiveDayForecast(lat, lon, apiKey)

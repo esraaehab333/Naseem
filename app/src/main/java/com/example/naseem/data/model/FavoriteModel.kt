@@ -1,4 +1,4 @@
-package com.example.naseem.presentation.fav.components
+package com.example.naseem.data.model
 
 import com.example.naseem.data.entity.FavoriteEntity
 

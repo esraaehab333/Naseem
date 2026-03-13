@@ -18,7 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.naseem.data.model.ForecastResponse
+import com.example.naseem.data.dto.ForecastResponse
 import com.example.naseem.utils.getWeatherIcon
 
 

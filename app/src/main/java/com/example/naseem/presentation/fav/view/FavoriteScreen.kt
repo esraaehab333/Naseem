@@ -42,7 +42,7 @@ fun FavoriteScreen(
                 Icon(
                     painter = painterResource(R.drawable.ic_add),
                     tint = White100 ,
-                    modifier = Modifier.size(16.dp),
+                    modifier = Modifier.size(26.dp),
                     contentDescription = "Add Place"
                 )
             }
