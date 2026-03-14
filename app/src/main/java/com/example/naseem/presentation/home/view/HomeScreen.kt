@@ -1,6 +1,6 @@
 package com.example.naseem.presentation.home.view
 
-import Next7DaysScreen
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.naseem.BuildConfig
 import com.example.naseem.R
 import com.example.naseem.presentation.home.componets.TodayForecastWeather
 import com.example.naseem.presentation.home.componets.WeatherDetailsCard
@@ -28,12 +29,12 @@ fun HomeScreen(
     val weatherData by viewModel.weatherData.collectAsState()
     val forecastData by viewModel.forecastData.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    Log.d("TAG", BuildConfig.WEATHER_API_KEY)
     LaunchedEffect(Unit) {
         val lat = 30.0444
         val lon = 31.2357
-        val apiKey = "17616e217ee841a81fda302a8a2d12b6"
-        viewModel.getCurrentWeather(lat, lon, apiKey)
-        viewModel.getFiveDayForecast(lat, lon, apiKey)
+        viewModel.getCurrentWeather(lat, lon)
+        viewModel.getFiveDayForecast(lat, lon)
     }
     if (isLoading) {
         Box(modifier = Modifier.fillMaxSize().background(White100), contentAlignment = Alignment.Center) {

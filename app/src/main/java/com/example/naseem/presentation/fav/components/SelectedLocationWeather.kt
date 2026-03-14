@@ -11,27 +11,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.naseem.R
+import com.example.naseem.ui.theme.Black100
+import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 
 @Composable
-fun SelectedLocationWeather(color: Color){
+fun SelectedLocationWeather(color: Color , weather:String){
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Icon(
-            imageVector = Icons.Default.Add,
+            painter = painterResource(R.drawable.ic_temperature),
             contentDescription = null,
             tint = color,
             modifier = Modifier.size(20.dp)
         )
-
         Text(
-            //TODO: fetch the real data here
-            text = "Temperature: 24°C",
+            text = "Temperature: $weather°C",
             fontSize = 15.sp,
-            color = Color.DarkGray
+            color = Black100,
+            fontFamily = PlusJakartaSansFontFamily,
+            fontWeight = FontWeight.Normal
         )
     }
 }

@@ -34,7 +34,6 @@ class MainActivity : ComponentActivity() {
             .getString("language", "en") ?: "en"
         super.attachBaseContext(applyLocale(newBase, lang))
     }
-
     private fun applyLocale(context: Context, lang: String): Context {
         val locale = Locale(lang)
         Locale.setDefault(locale)
@@ -42,11 +41,9 @@ class MainActivity : ComponentActivity() {
         config.setLocale(locale)
         return context.createConfigurationContext(config)
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             val context = LocalContext.current
             val viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory(context))
