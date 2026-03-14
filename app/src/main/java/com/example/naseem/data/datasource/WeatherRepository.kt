@@ -1,6 +1,7 @@
 package com.example.naseem.data.datasource
 
 import android.content.Context
+import com.example.naseem.BuildConfig
 import com.example.naseem.common.ApiState
 import com.example.naseem.data.datasource.local.FavWeatherLocalDataSource
 import com.example.naseem.data.datasource.remote.WeatherRemoteDataSource
@@ -12,12 +13,12 @@ import kotlinx.coroutines.flow.Flow
 class WeatherRepository(context: Context) {
     private val remoteDataSource = WeatherRemoteDataSource()
     private val localDataSource = FavWeatherLocalDataSource(context)
-
-    suspend fun getCurrentWeather(lat: Double, lon: Double, apiKey: String): ApiState<WeatherResponse> {
+    val apiKey = BuildConfig.WEATHER_API_KEY
+    suspend fun getCurrentWeather(lat: Double, lon: Double): ApiState<WeatherResponse> {
         return remoteDataSource.getCurrentWeather(lat, lon, apiKey)
     }
 
-    suspend fun getFiveDayForecast(lat: Double, lon: Double, apiKey: String): ApiState<ForecastResponse> {
+    suspend fun getFiveDayForecast(lat: Double, lon: Double): ApiState<ForecastResponse> {
         return remoteDataSource.getFiveDayForecast(lat, lon, apiKey)
     }
 

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.naseem.BuildConfig
 import com.example.naseem.data.model.FavoriteModel
 import com.example.naseem.presentation.fav.components.BottomSheetSection
 import com.example.naseem.presentation.fav.components.LocationFloatingActionButton
@@ -30,6 +31,7 @@ fun AddFavoritePlaceScreen(
     onNavigateBack: () -> Unit
 ) {
     val context = LocalContext.current
+    val selectedWeather by viewModel.selectedWeather.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     var suggestions by remember { mutableStateOf<List<Address>>(emptyList()) }
     var selectedLocation by remember { mutableStateOf<GeoPoint?>(null) }
@@ -49,12 +51,15 @@ fun AddFavoritePlaceScreen(
             mapCenter = point
         }
     }
-
     LaunchedEffect(selectedLocation) {
         selectedLocation?.let { location ->
             LocationUtils.getAddressFromLocation(context, location) { address ->
                 selectedAddress = address
             }
+            viewModel.getWeatherForFavoriteLocation(
+                lat = location.latitude,
+                lon = location.longitude
+            )
         }
     }
     Scaffold(containerColor = Color.Transparent) { innerPadding ->
@@ -131,6 +136,7 @@ fun AddFavoritePlaceScreen(
                         color = color,
                         selectedAddress = selectedAddress,
                         selectedLocation = selectedLocation,
+                        weather = selectedWeather?.main?.temp?.toString() ?: "--",
                         onSaveClick = {
                             val location = selectedLocation
                             if (location != null) {

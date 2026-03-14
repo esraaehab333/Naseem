@@ -5,16 +5,12 @@ import android.location.Address
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,7 +27,8 @@ fun BottomSheetSection(
     color: Color,
     selectedAddress: Address?,
     selectedLocation: GeoPoint?,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
+    weather:String
 ) {
     Column(
         modifier = Modifier
@@ -88,8 +85,7 @@ fun BottomSheetSection(
         Spacer(modifier = Modifier.height(12.dp))
         HorizontalDivider(color = Gray100.copy(alpha = 0.15f))
         Spacer(modifier = Modifier.height(12.dp))
-        //TODO: not only the temp
-        SelectedLocationWeather(color)
+        SelectedLocationWeather(color , weather = weather)
         Spacer(modifier = Modifier.height(30.dp))
         ButtonRow(
             color = color,

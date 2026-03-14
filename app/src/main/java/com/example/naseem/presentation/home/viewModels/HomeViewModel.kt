@@ -31,11 +31,11 @@ class HomeViewModel(
 
     private val _errorMessage = MutableSharedFlow<String>()
     val errorMessage: SharedFlow<String> = _errorMessage
-
-    fun getCurrentWeather(lat: Double, lon: Double, apiKey: String) {
+    
+    fun getCurrentWeather(lat: Double, lon: Double) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = weatherRepository.getCurrentWeather(lat, lon, apiKey)
+            val result = weatherRepository.getCurrentWeather(lat, lon)
             when (result) {
                 is ApiState.Success -> {
                     _weatherData.value = result.data
@@ -48,10 +48,10 @@ class HomeViewModel(
             _isLoading.value = false
         }
     }
-    fun getFiveDayForecast(lat: Double, lon: Double, apiKey: String) {
+    fun getFiveDayForecast(lat: Double, lon: Double) {
         viewModelScope.launch {
             _isLoading.value = true
-            val result = weatherRepository.getFiveDayForecast(lat, lon, apiKey)
+            val result = weatherRepository.getFiveDayForecast(lat, lon)
 
             when (result) {
                 is ApiState.Success -> {
