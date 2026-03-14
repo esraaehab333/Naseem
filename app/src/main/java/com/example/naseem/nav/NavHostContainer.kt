@@ -10,8 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.naseem.presentation.settings.view.SettingsScreen
 import com.example.naseem.presentation.alert.view.AlertScreen
+import com.example.naseem.presentation.settings.view.SettingsScreen
 import com.example.naseem.presentation.fav.view.AddFavoritePlaceScreen
 import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel
 import com.example.naseem.presentation.home.view.HomeScreen
@@ -44,7 +44,12 @@ fun NavHostContainer(
                 )
             }
             composable(Routes.ALERT) {
-                AlertScreen()
+                AlertScreen(
+                    color=color,
+                    onBackButtonClick = {
+                        navController.popBackStack()
+                    }
+                )
             }
             composable(Routes.FAVORITE) {
                 FavoriteScreen(
