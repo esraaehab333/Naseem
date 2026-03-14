@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">نسيم</string>
+    <string name="settings">الإعدادات</string>
+    <string name="units">الوحدات</string>
+    <string name="temperature">درجة الحرارة</string>
+    <string name="wind_speed">سرعة الرياح</string>
+    <string name="celsius">سيليزي</string>
+    <string name="fahrenheit">فهرنهايت</string>
+    <string name="kelvin">كلفن</string>
+    <string name="meter_per_sec">م/ث</string>
+    <string name="miles_per_hour">ميل/س</string>
+    <string name="location">الموقع</string>
+    <string name="use_gps">استخدام GPS</string>
+    <string name="choose_from_map">اختيار من الخريطة</string>
+    <string name="language">اللغة</string>
+    <string name="english_us">الإنجليزية (US)</string>
+    <string name="arabic">العربية</string>
+    <string name="unknown_location">موقع غير معروف</string>
+    <string name="unknown_date">---</string>
+    <string name="km_per_hour"> كم/س</string>
+    <string name="hpa"> هكتوباسكال</string>
+    <string name="five_day_forecast">توقعات 5 أيام</string>
+    <string name="back">رجوع</string>
+    <string name="daily_forecast">التوقع اليومي</string>
+    <string name="unknown_status">صافي</string>
+    <string name="header_image_description">صورة الهيدر</string>
+    <string name="location_icon_description">أيقونة الموقع</string>
+    <string name="humidity">الرطوبة</string>
+    <string name="wind">الرياح</string>
+    <string name="cloudy">غيوم</string>
+    <string name="pressure">الضغط</string>
+    <string name="today">اليوم</string>
+    <string name="tomorrow">غدًا</string>
+    <string name="temperature_trend">اتجاه الحرارة</string>
+    <string name="mon">الاثنين</string>
+    <string name="tue">الثلاثاء</string>
+    <string name="wed">الأربعاء</string>
+    <string name="thu">الخميس</string>
+    <string name="fri">الجمعة</string>
+    <string name="sat">السبت</string>
+    <string name="sun">الأحد</string>
+    <string name="next_5_days">الخمسة أيام القادمة</string>
+</resources>

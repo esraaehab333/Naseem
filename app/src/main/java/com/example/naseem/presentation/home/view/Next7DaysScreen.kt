@@ -11,9 +11,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.naseem.R
 import com.example.naseem.presentation.home.componets.DailyForecastRow
 import com.example.naseem.presentation.home.componets.ForecastDay
 import com.example.naseem.presentation.home.componets.TemperatureTrendSection
@@ -37,13 +39,14 @@ fun Next7DaysScreen(color: Color, viewModel: HomeViewModel, onBackButtonClick: (
         topBar = {
             TopAppBar(
                 title = {
-                    Text("5-Day Forecast",
+                    Text(
+                        stringResource(R.string.five_day_forecast),
                         fontWeight = FontWeight.Bold,
                         fontFamily = PlusJakartaSansFontFamily,
                         fontSize = 18.sp)},
                 navigationIcon = {
                     IconButton(onClick = onBackButtonClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
@@ -67,7 +70,7 @@ fun Next7DaysScreen(color: Color, viewModel: HomeViewModel, onBackButtonClick: (
             }
             item {
                 Text(
-                    "Daily Forecast",
+                    stringResource(R.string.daily_forecast),
                     modifier = Modifier.padding(20.dp),
                     fontWeight = FontWeight.Bold,
                     fontFamily = PlusJakartaSansFontFamily
@@ -84,9 +87,8 @@ fun Next7DaysScreen(color: Color, viewModel: HomeViewModel, onBackButtonClick: (
                         dayName = formatUnixToDay(day.dt ?: 0L),
                         high = highTemp,
                         low = lowTemp,
-                        icon = Icons.Default.Star,
                         color = color,
-                        status = weatherInfo?.main ?: "Clear",
+                        status = weatherInfo?.main ?: stringResource(R.string.unknown_status),
                     ),
                     color = color,
                     icon = iconRes

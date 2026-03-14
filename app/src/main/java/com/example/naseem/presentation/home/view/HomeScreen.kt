@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.naseem.R
 import com.example.naseem.presentation.home.componets.TodayForecastWeather
@@ -44,8 +45,8 @@ fun HomeScreen(
                 modifier = Modifier.background(White100)
             ) {
                 WeatherHeaderSection(
-                    address = weatherData?.name ?: "Unknown Location",
-                    date = weatherData?.dt?.let { formatUnixTimestamp(it) } ?: "---",
+                    address = weatherData?.name ?: stringResource(R.string.unknown_location),
+                    date = weatherData?.dt?.let { formatUnixTimestamp(it) } ?: stringResource(R.string.unknown_date),
                     image = image,
                     tempDegree = weatherData?.main?.temp?.toInt()?.toString() ?: "0"
                 )
@@ -53,8 +54,8 @@ fun HomeScreen(
                     modifier = Modifier.align(Alignment.BottomCenter).offset(y = 50.dp),
                     color = color,
                     humidity = "${weatherData?.main?.humidity}%",
-                    windSpeed = "${weatherData?.wind?.speed} km/h",
-                    pressure = "${weatherData?.main?.pressure} hPa",
+                    windSpeed = "${weatherData?.wind?.speed} ${stringResource(R.string.km_per_hour)}",
+                    pressure = "${weatherData?.main?.pressure} ${stringResource(R.string.hpa)}",
                     clouds = "${weatherData?.clouds?.all}%"
                 )
             }

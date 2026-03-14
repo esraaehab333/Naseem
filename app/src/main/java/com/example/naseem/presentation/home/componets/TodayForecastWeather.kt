@@ -17,7 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.naseem.R
 import com.example.naseem.data.dto.ForecastResponse
 import com.example.naseem.utils.getWeatherIcon
 
@@ -30,9 +32,9 @@ fun TodayForecastWeather(color: Color, forecastData: ForecastResponse?, onNext7D
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 18.dp)) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Row {
-                HomeTabButton("Today", selectedTab == 0, { selectedTab = 0 }, color)
+                HomeTabButton(text = stringResource(R.string.today),selectedTab == 0, { selectedTab = 0 }, color)
                 Spacer(modifier = Modifier.width(20.dp))
-                HomeTabButton("Tomorrow", selectedTab == 1, { selectedTab = 1 }, color)
+                HomeTabButton(text = stringResource(R.string.tomorrow), selectedTab == 1, { selectedTab = 1 }, color)
             }
             Next7DaysForecastButton(Modifier, color, onNext7DaysClick)
         }

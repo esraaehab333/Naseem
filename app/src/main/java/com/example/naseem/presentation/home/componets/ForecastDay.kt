@@ -8,6 +8,5 @@ data class ForecastDay(
     val status: String,
     val high: Int,
     val low: Int,
-    val icon: ImageVector,
-    val color: Color = Color(0xFF81C784)
+    val color:Color
 )

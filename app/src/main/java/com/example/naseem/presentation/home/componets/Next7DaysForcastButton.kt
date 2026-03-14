@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,7 +33,7 @@ fun Next7DaysForecastButton(modifier: Modifier, color: Color,onNext7DaysClick: (
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Next 7 days",
+            text = stringResource(R.string.next_5_days),
             fontWeight = FontWeight.Medium,
             fontSize = 12.sp,
             color = color

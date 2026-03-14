@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.naseem.R
 
@@ -38,26 +39,25 @@ fun WeatherDetailsCard(
         ) {
             WeatherDetailItem(
                 iconRes = R.drawable.ic_humidity,
-                label = "Humidity",
+                label = stringResource(R.string.humidity),
                 value = humidity,
                 color = color
             )
             WeatherDetailItem(
                 iconRes = R.drawable.ic_wind,
-                label = "Wind",
+                label = stringResource(R.string.wind),
                 value = windSpeed,
                 color = color
             )
             WeatherDetailItem(
                 iconRes = R.drawable.ic_cloudy,
-                label = "Cloudy",
+                label = stringResource(R.string.cloudy),
                 value = clouds,
                 color = color
             )
-            //TODO:Icon here change it
             WeatherDetailItem(
-                iconRes = R.drawable.ic_pressure,
-                label = "Pressure",
+                iconRes = R.drawable.ic_air_presure,
+                label = stringResource(R.string.pressure),
                 value = pressure,
                 color = color
             )

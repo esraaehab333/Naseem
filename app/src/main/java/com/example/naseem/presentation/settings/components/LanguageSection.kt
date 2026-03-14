@@ -1,5 +1,6 @@
 package com.example.naseem.presentation.settings.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,13 +30,20 @@ import com.example.naseem.ui.theme.White100
 @Composable
 fun LanguageSection(
     color: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onLanguageChange: (String) -> Unit
 ) {
-    var isArabic by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    var isArabic by remember {
+        mutableStateOf(
+            context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+                .getString("language", "en") == "ar"
+        )
+    }
 
     Column(modifier = modifier) {
         Text(
-            text = "LANGUAGE",
+            text = stringResource(R.string.language),
             style = TextStyle(
                 fontFamily = PlusJakartaSansFontFamily,
                 fontWeight = FontWeight.SemiBold,
@@ -53,13 +63,15 @@ fun LanguageSection(
         ) {
             SettingsRow(
                 color = color,
-                //TODO: change the icon here too
-                icon = R.drawable.ic_fav,
-                title = if (isArabic) "العربية" else "English (US)",
+                icon = R.drawable.ic_language,
+                title = if (isArabic) stringResource(R.string.arabic) else stringResource(R.string.english_us),
                 trailingContent = {
                     Switch(
                         checked = isArabic,
-                        onCheckedChange = { isArabic = it },
+                        onCheckedChange = { checked ->
+                            isArabic = checked
+                            onLanguageChange(if (checked) "ar" else "en")
+                        },
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = White100,
                             checkedTrackColor = color,
