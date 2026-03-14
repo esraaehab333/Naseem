@@ -1,3 +1,5 @@
+package com.example.naseem.presentation.fav.components
+
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,14 +21,14 @@ import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
 
 @Composable
-fun SearchTextField(searchQuery: String, onQueryChange: (String) -> Unit){
+fun SearchTextField(searchQuery: String, onQueryChange: (String) -> Unit) {
     TextField(
         value = searchQuery,
         onValueChange = onQueryChange,
         modifier = Modifier.fillMaxWidth(),
         placeholder = {
             Text(
-                text="Search location..." ,
+                text = stringResource(R.string.search_location_hint),
                 color = Gray100,
                 fontFamily = PlusJakartaSansFontFamily,
                 fontWeight = FontWeight.Normal,

@@ -41,4 +41,15 @@
     <string name="sat">السبت</string>
     <string name="sun">الأحد</string>
     <string name="next_5_days">الخمسة أيام القادمة</string>
+    <string name="saved_places">الأماكن المحفوظة</string>
+    <string name="saved_places_subtitle">وصول سريع إلى وجهاتك المفضلة</string>
+    <string name="something_went_wrong">حدث خطأ ما</string>
+    <string name="add_place">إضافة مكان</string>
+    <string name="delete">حذف</string>
+    <string name="unknown">غير معروف</string>
+    <string name="temperature_placeholder">درجة الحرارة: ٢٤°م</string>
+    <string name="search_location_hint">ابحث عن موقع...</string>
+    <string name="my_location">موقعي</string>
+    <string name="selected_location">الموقع المحدد</string>
+    <string name="save_location">حفظ الموقع</string>
 </resources>

@@ -40,4 +40,15 @@
     <string name="sat">SAT</string>
     <string name="sun">SUN</string>
     <string name="next_5_days">Next 5 Days</string>
+    <string name="saved_places">Saved Places</string>
+    <string name="saved_places_subtitle">Quick access to your top destinations</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="add_place">Add Place</string>
+    <string name="delete">Delete</string>
+    <string name="unknown">Unknown</string>
+    <string name="temperature_placeholder">Temperature: 24°C</string>
+    <string name="search_location_hint">Search location...</string>
+    <string name="my_location">My Location</string>
+    <string name="selected_location">Selected Location</string>
+    <string name="save_location">Save Location</string>
 </resources>

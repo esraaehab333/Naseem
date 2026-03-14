@@ -3,6 +3,7 @@ package com.example.naseem.presentation.fav.components
 import android.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.naseem.R
 import com.example.naseem.utils.DrawableHelper
@@ -22,6 +23,9 @@ fun MapSection(
     selectedLocation: GeoPoint?,
     onLocationSelected: (GeoPoint) -> Unit
 ) {
+    val myLocationLabel = stringResource(R.string.my_location)
+    val selectedLocationLabel = stringResource(R.string.selected_location)
+
     AndroidView(
         factory = { ctx ->
             val mapView = MapView(ctx).apply {
@@ -59,8 +63,8 @@ fun MapSection(
                     val marker = Marker(view).apply {
                         position = point
                         setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                        title = "My Location"
-                        icon = DrawableHelper.resizeDrawable(view.context, R.drawable.ic_location_soild,70 , 100, Color.RED)
+                        title = myLocationLabel
+                        icon = DrawableHelper.resizeDrawable(view.context, R.drawable.ic_location_soild, 70, 100, Color.RED)
                     }
                     view.overlays.add(marker)
                 }
@@ -69,7 +73,7 @@ fun MapSection(
                 val marker = Marker(view).apply {
                     position = point
                     setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                    title = "Selected Location"
+                    title = selectedLocationLabel
                     icon = DrawableHelper.resizeDrawable(view.context, R.drawable.ic_location_soild, 70, 100, Color.RED)
                 }
                 view.overlays.add(marker)

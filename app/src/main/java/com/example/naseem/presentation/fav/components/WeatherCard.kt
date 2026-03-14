@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -83,7 +84,7 @@ fun WeatherCard(
             IconButton(onClick = onDeleteClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_delete),
-                    contentDescription = "Delete",
+                    contentDescription = stringResource(R.string.delete),
                     tint = Gray100.copy(alpha = 0.7f),
                     modifier = Modifier.size(16.dp)
                 )
