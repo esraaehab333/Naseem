@@ -23,9 +23,10 @@ fun NavHostContainer(
     navController: NavHostController,
     padding: PaddingValues,
     color: Color,
-    image:Int,
+    image: Int,
     viewModel: HomeViewModel,
-    favoriteViewModel:FavoriteViewModel
+    favoriteViewModel: FavoriteViewModel,
+    onLanguageChange: (String) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -39,34 +40,45 @@ fun NavHostContainer(
                     image = image,
                     onNext7DaysClick = {
                         navController.navigate(Routes.NEXT7DAYS)
-                    })
+                    }
+                )
             }
             composable(Routes.ALERT) {
                 AlertScreen()
             }
             composable(Routes.FAVORITE) {
                 FavoriteScreen(
-                    color=color ,
-                    viewModel=favoriteViewModel,
+                    color = color,
+                    viewModel = favoriteViewModel,
                     onFloatingActionButtonClicked = {
-                    navController.navigate(Routes.ADDFAVORITEPLACE)
-                    })
+                        navController.navigate(Routes.ADDFAVORITEPLACE)
+                    }
+                )
             }
             composable(Routes.SETTINGS) {
-                SettingsScreen(color=color)
+                SettingsScreen(
+                    color = color,
+                    onLanguageChange = onLanguageChange
+                )
             }
             composable(Routes.NEXT7DAYS) {
-                Next7DaysScreen(color=color,
+                Next7DaysScreen(
+                    color = color,
                     viewModel = viewModel,
                     onBackButtonClick = {
                         navController.popBackStack()
-                    })
+                    }
+                )
             }
             composable(Routes.ADDFAVORITEPLACE) {
-                AddFavoritePlaceScreen(color=color , viewModel =favoriteViewModel ,
+                AddFavoritePlaceScreen(
+                    color = color,
+                    viewModel = favoriteViewModel,
                     onNavigateBack = {
-                    navController.popBackStack()
-                })
+                        navController.popBackStack()
+                    }
+                )
             }
-        })
+        }
+    )
 }

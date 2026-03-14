@@ -58,7 +58,7 @@ import com.example.naseem.presentation.settings.components.UnitSection
 import com.example.naseem.ui.theme.Gray100
 
 @Composable
-fun SettingsScreen(color:Color) {
+fun SettingsScreen(color:Color , onLanguageChange: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,6 +78,6 @@ fun SettingsScreen(color:Color) {
         Spacer(modifier = Modifier.height(32.dp))
         TemperatureAndWindSpeedSection(color = color)
         Spacer(modifier = Modifier.height(32.dp))
-        LanguageSection(color = color)
+        LanguageSection(color = color , onLanguageChange=onLanguageChange)
     }
 }

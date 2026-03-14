@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +41,7 @@ fun WeatherHeaderSection(image:Int,address:String ,tempDegree:String,date:String
     ) {
         Image(
             painter = painterResource(image),
-            contentDescription = "Header Image",
+            contentDescription = stringResource(R.string.header_image_description),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
@@ -55,7 +56,7 @@ fun WeatherHeaderSection(image:Int,address:String ,tempDegree:String,date:String
             Row {
                 Icon(
                     painter = painterResource(R.drawable.ic_location),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.location_icon_description),
                     tint = White100
                 )
                 Text(
