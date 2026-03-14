@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.naseem.BuildConfig
 import com.example.naseem.data.model.FavoriteModel
 import com.example.naseem.presentation.fav.components.BottomSheetSection
 import com.example.naseem.presentation.fav.components.LocationFloatingActionButton
@@ -58,7 +57,7 @@ fun AddFavoritePlaceScreen(
             }
             viewModel.getWeatherForFavoriteLocation(
                 lat = location.latitude,
-                lon = location.longitude
+                lon = location.longitude,
             )
         }
     }

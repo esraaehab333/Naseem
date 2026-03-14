@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,9 +24,8 @@ import com.example.naseem.R
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 
-
 @Composable
-fun SuggestionRow(address: Address, onClick: () -> Unit , color:Color) {
+fun SuggestionRow(address: Address, onClick: () -> Unit, color: Color) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,7 +42,7 @@ fun SuggestionRow(address: Address, onClick: () -> Unit , color:Color) {
         Spacer(modifier = Modifier.width(12.dp))
         Column {
             Text(
-                text = address.featureName ?: "Unknown",
+                text = address.featureName ?: stringResource(R.string.unknown),
                 color = color,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -50,7 +50,7 @@ fun SuggestionRow(address: Address, onClick: () -> Unit , color:Color) {
             )
             Text(
                 text = address.countryName ?: "",
-                color= Gray100,
+                color = Gray100,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = PlusJakartaSansFontFamily

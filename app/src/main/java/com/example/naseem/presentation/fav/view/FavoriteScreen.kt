@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,9 +44,9 @@ fun FavoriteScreen(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_add),
-                    tint = White100 ,
+                    tint = White100,
                     modifier = Modifier.size(26.dp),
-                    contentDescription = "Add Place"
+                    contentDescription = stringResource(R.string.add_place)
                 )
             }
         }
@@ -60,7 +61,7 @@ fun FavoriteScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Saved Places",
+                text = stringResource(R.string.saved_places),
                 fontFamily = PlusJakartaSansFontFamily,
                 fontWeight = FontWeight.Bold,
                 color = Black100,
@@ -69,7 +70,7 @@ fun FavoriteScreen(
             )
 
             Text(
-                text = "Quick access to your top destinations",
+                text = stringResource(R.string.saved_places_subtitle),
                 fontSize = 12.sp,
                 color = Gray100,
                 fontFamily = PlusJakartaSansFontFamily,
@@ -90,10 +91,10 @@ fun FavoriteScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             EmptyStateScreen(
-                                color=color,
                                 icon = R.drawable.ic_favorite_map,
-                                title ="No saved places yet",
-                                subtitle = "Add your favorite cities to stay updated on their weather conditions."
+                                title = stringResource(R.string.fav_empty_title),
+                                subtitle = stringResource(R.string.fav_empty_subtitle),
+                                color = color
                             )
                         }
                     }
@@ -117,7 +118,7 @@ fun FavoriteScreen(
                 }
                 //TODO:Not handled yet
                 is ApiState.Failure -> {
-                    Text("Something went wrong", color = Color.Red)
+                    Text(stringResource(R.string.something_went_wrong), color = Color.Red)
                 }
             }
         }
