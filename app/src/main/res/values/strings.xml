@@ -51,4 +51,9 @@
     <string name="my_location">My Location</string>
     <string name="selected_location">Selected Location</string>
     <string name="save_location">Save Location</string>
+    <string name="temperature_label">Temperature: %1$s°C</string>
+    <string name="fav_empty_title">No Favorite Places Yet</string>
+    <string name="fav_empty_subtitle">Add your favorite locations to get quick access to their weather</string>
+    <string name="alerts_empty_title">No Weather Alerts</string>
+    <string name="alerts_empty_subtitle">You\'re all clear! No active weather alerts at the moment</string>
 </resources>

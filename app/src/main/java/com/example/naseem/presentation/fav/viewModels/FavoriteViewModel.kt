@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.naseem.common.ApiState
 import com.example.naseem.data.datasource.WeatherRepository
+import com.example.naseem.data.dto.ForecastResponse
+import com.example.naseem.data.dto.WeatherResponse
 import com.example.naseem.data.model.FavoriteModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -23,6 +25,22 @@ class FavoriteViewModel(
 
     private val _addEvent = MutableSharedFlow<String>()
     val addEvent: SharedFlow<String> = _addEvent.asSharedFlow()
+
+    private val _selectedWeather = MutableStateFlow<WeatherResponse?>(null)
+    val selectedWeather: StateFlow<WeatherResponse?> = _selectedWeather.asStateFlow()
+
+    private val _selectedForecast = MutableStateFlow<ForecastResponse?>(null)
+    val selectedForecast: StateFlow<ForecastResponse?> = _selectedForecast.asStateFlow()
+
+    fun getWeatherForFavoriteLocation(lat: Double, lon: Double) {
+        viewModelScope.launch {
+            val weatherResult = repository.getCurrentWeather(lat, lon)
+            val forecastResult = repository.getFiveDayForecast(lat, lon)
+
+            if (weatherResult is ApiState.Success) _selectedWeather.value = weatherResult.data
+            if (forecastResult is ApiState.Success) _selectedForecast.value = forecastResult.data
+        }
+    }
 
     init {
         getAllFavorites()

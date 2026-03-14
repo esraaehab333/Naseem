@@ -11,9 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.naseem.R
 import com.example.naseem.data.model.FavoriteModel
 import com.example.naseem.presentation.fav.components.BottomSheetSection
 import com.example.naseem.presentation.fav.components.LocationFloatingActionButton
@@ -32,7 +30,7 @@ fun AddFavoritePlaceScreen(
     onNavigateBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val unknownLocation = stringResource(R.string.unknown_location)
+    val selectedWeather by viewModel.selectedWeather.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     var suggestions by remember { mutableStateOf<List<Address>>(emptyList()) }
     var selectedLocation by remember { mutableStateOf<GeoPoint?>(null) }
@@ -42,26 +40,27 @@ fun AddFavoritePlaceScreen(
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     val isSheetVisible = selectedLocation != null && !imeVisible
-
     LaunchedEffect(Unit) {
         Configuration.getInstance().apply {
             userAgentValue = context.packageName
-            load(context, context.getSharedPreferences("osmdroid", MODE_PRIVATE))
+            load(context, context.getSharedPreferences("osmdroid",MODE_PRIVATE))
         }
         LocationUtils.getCurrentLocation(context, fusedLocationClient) { point ->
             currentLocation = point
             mapCenter = point
         }
     }
-
     LaunchedEffect(selectedLocation) {
         selectedLocation?.let { location ->
             LocationUtils.getAddressFromLocation(context, location) { address ->
                 selectedAddress = address
             }
+            viewModel.getWeatherForFavoriteLocation(
+                lat = location.latitude,
+                lon = location.longitude,
+            )
         }
     }
-
     Scaffold(containerColor = Color.Transparent) { innerPadding ->
         Box(
             modifier = Modifier
@@ -119,7 +118,7 @@ fun AddFavoritePlaceScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
                     LocationFloatingActionButton(
-                        color = color,
+                        color=color,
                         onClick = {
                             LocationUtils.getCurrentLocation(context, fusedLocationClient) { point ->
                                 currentLocation = point
@@ -129,17 +128,20 @@ fun AddFavoritePlaceScreen(
                         }
                     )
                 }
-                AnimatedVisibility(visible = isSheetVisible) {
+                AnimatedVisibility(
+                    visible = isSheetVisible
+                ) {
                     BottomSheetSection(
                         color = color,
                         selectedAddress = selectedAddress,
                         selectedLocation = selectedLocation,
+                        weather = selectedWeather?.main?.temp?.toString() ?: "--",
                         onSaveClick = {
                             val location = selectedLocation
                             if (location != null) {
                                 viewModel.addToFavorites(
                                     FavoriteModel(
-                                        cityName = selectedAddress?.locality ?: unknownLocation,
+                                        cityName = selectedAddress?.locality ?: "Unknown Location",
                                         fullAddress = selectedAddress?.getAddressLine(0)
                                             ?: "${location.latitude}, ${location.longitude}",
                                         latitude = location.latitude,

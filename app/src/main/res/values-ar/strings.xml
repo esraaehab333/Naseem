@@ -52,4 +52,9 @@
     <string name="my_location">موقعي</string>
     <string name="selected_location">الموقع المحدد</string>
     <string name="save_location">حفظ الموقع</string>
+    <string name="temperature_label">درجة الحرارة: %1$s°C</string>
+    <string name="fav_empty_title">لا توجد أماكن مفضلة</string>
+    <string name="fav_empty_subtitle">أضف أماكنك المفضلة للوصول السريع إلى طقسها</string>
+    <string name="alerts_empty_title">لا توجد تنبيهات طقس</string>
+    <string name="alerts_empty_subtitle">كل شيء على ما يرام! لا توجد تنبيهات طقس نشطة الآن</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.example.naseem.presentation.fav.components
 
-import ButtonRow
 import android.location.Address
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,7 +26,8 @@ fun BottomSheetSection(
     color: Color,
     selectedAddress: Address?,
     selectedLocation: GeoPoint?,
-    onSaveClick: () -> Unit
+    onSaveClick: () -> Unit,
+    weather:String
 ) {
     Column(
         modifier = Modifier
@@ -84,8 +84,7 @@ fun BottomSheetSection(
         Spacer(modifier = Modifier.height(12.dp))
         HorizontalDivider(color = Gray100.copy(alpha = 0.15f))
         Spacer(modifier = Modifier.height(12.dp))
-        //TODO: not only the temp
-        SelectedLocationWeather(color)
+        SelectedLocationWeather(color , weather = weather)
         Spacer(modifier = Modifier.height(30.dp))
         ButtonRow(
             color = color,
