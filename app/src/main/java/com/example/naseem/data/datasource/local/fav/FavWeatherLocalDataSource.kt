@@ -1,4 +1,4 @@
-package com.example.naseem.data.datasource.local
+package com.example.naseem.data.datasource.local.fav
 
 import android.content.Context
 import com.example.naseem.data.db.FavoriteDatabase

@@ -16,6 +16,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.naseem.nav.NavHostContainer
+import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModel
+import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModelFactory
 import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel
 import com.example.naseem.presentation.fav.viewModels.FavoriteViewModelFactory
 import com.example.naseem.presentation.home.componets.BottomNavigationBar
@@ -42,12 +44,14 @@ class MainActivity : ComponentActivity() {
         return context.createConfigurationContext(config)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             val context = LocalContext.current
             val viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory(context))
             val favoriteViewModel: FavoriteViewModel = viewModel(factory = FavoriteViewModelFactory(context))
+            val alertViewModel:WeatherAlertViewModel = viewModel(factory = WeatherAlertViewModelFactory(context))
             val weatherData by viewModel.weatherData.collectAsState()
             val currentTemp = weatherData?.main?.temp ?: 20.0
             val dynamicColor = getThemeConfig(currentTemp)
@@ -75,6 +79,7 @@ class MainActivity : ComponentActivity() {
                         color = dynamicColor.color,
                         viewModel = viewModel,
                         favoriteViewModel = favoriteViewModel,
+                        alertViewModel = alertViewModel,
                         image = dynamicColor.imageRes,
                         onLanguageChange = { langCode ->
                             getSharedPreferences("settings", MODE_PRIVATE)
