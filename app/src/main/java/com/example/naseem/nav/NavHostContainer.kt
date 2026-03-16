@@ -45,7 +45,7 @@ fun NavHostContainer(
             }
             composable(Routes.ALERT) {
                 AlertScreen(
-                    color=color,
+                  //  color=color,
                     onBackButtonClick = {
                         navController.popBackStack()
                     }
