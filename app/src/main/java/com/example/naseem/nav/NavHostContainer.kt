@@ -82,6 +82,7 @@ fun NavHostContainer(
             composable(Routes.ADDWEATHERALERT) {
                 AddWeatherAlertScreen(
                     color = color,
+                    viewModel=alertViewModel,
                     onBackButtonClick = {
                         navController.popBackStack()
                     }

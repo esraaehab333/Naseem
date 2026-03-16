@@ -34,10 +34,12 @@ import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 fun AlertItem(
     title: String,
     icon: Int,
-    location: String = "London, UK",
-    timeRange: String = "08:00 AM - 06:00 PM",
+    location: String,
+    timeRange: String,
     isAlarm: Boolean,
-    color: Color
+    color: Color,
+    onDeleteButton: () -> Unit,
+    date:String
 ) {
     var isEnabled by remember { mutableStateOf(true) }
     Card(
@@ -68,6 +70,7 @@ fun AlertItem(
                     fontSize = 16.sp,
                     modifier = Modifier.weight(1f)
                 )
+                //todo:want to update this
                 Switch(
                     checked = isEnabled,
                     onCheckedChange = { isEnabled = it },
@@ -79,9 +82,9 @@ fun AlertItem(
                     )
                 )
             }
-            AlertDetails(location,timeRange, color)
+            AlertDetails(location,timeRange, color, date)
             Spacer(modifier = Modifier.height(20.dp))
-            AlertActionButton(color)
+            AlertActionButton(color, onDeleteButton)
         }
     }
 }

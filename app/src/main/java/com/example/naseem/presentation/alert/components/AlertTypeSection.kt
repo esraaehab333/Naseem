@@ -41,13 +41,16 @@ import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 
 @Composable
-fun AlertTypeSection(color: Color) {
-    var selectedIndex by remember { mutableIntStateOf(0) }
+fun AlertTypeSection(
+    color: Color,
+    selectedType: String,
+    onTypeSelected: (String) -> Unit
+) {
     val options = listOf("Notification", "Alarm")
-    val icons = listOf(
-        R.drawable.ic_notification,
-        R.drawable.ic_alarm_sound
-    )
+    val icons = listOf(R.drawable.ic_notification, R.drawable.ic_alarm_sound)
+    val selectedIndex = options.indexOfFirst { it.lowercase() == selectedType.lowercase() }
+        .coerceAtLeast(0)
+
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -86,11 +89,9 @@ fun AlertTypeSection(color: Color) {
                     .shadow(2.dp, RoundedCornerShape(12.dp))
                     .background(Color.White, RoundedCornerShape(12.dp))
             )
-
             Row(modifier = Modifier.fillMaxSize()) {
                 options.forEachIndexed { index, text ->
                     val isSelected = selectedIndex == index
-
                     Row(
                         modifier = Modifier
                             .weight(1f)
@@ -98,7 +99,7 @@ fun AlertTypeSection(color: Color) {
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null
-                            ) { selectedIndex = index },
+                            ) { onTypeSelected(text.lowercase()) },
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {

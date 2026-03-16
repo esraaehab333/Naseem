@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     contentWindowInsets = WindowInsets(0, 0, 0, 0),
                     bottomBar = {
-                        if (currentRoute != Routes.NEXT7DAYS && currentRoute != Routes.ADDFAVORITEPLACE) {
+                        if (currentRoute != Routes.NEXT7DAYS && currentRoute != Routes.ADDFAVORITEPLACE&& currentRoute != Routes.ADDWEATHERALERT) {
                             BottomNavigationBar(
                                 navController = navController,
                                 color = dynamicColor.color

@@ -26,6 +26,7 @@ import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
+import com.example.naseem.utils.WeatherFilter
 
 @Composable
 fun WeatherAlertScreen(
@@ -129,6 +130,19 @@ fun WeatherAlertScreen(
         }
     }
 }
+private fun WeatherFilter.icon(): Int = when (this) {
+    WeatherFilter.RAIN         -> R.drawable.ic_rainy
+    WeatherFilter.WIND         -> R.drawable.ic_wind
+    WeatherFilter.SNOW         -> R.drawable.ic_snowy
+    WeatherFilter.THUNDERSTORM -> R.drawable.ic_thunderstorm
+}
+
+private fun WeatherFilter.displayName(): String = when (this) {
+    WeatherFilter.RAIN         -> "Heavy Rain"
+    WeatherFilter.WIND         -> "Strong Wind"
+    WeatherFilter.SNOW         -> "Snowfall"
+    WeatherFilter.THUNDERSTORM -> "Thunderstorm"
+}
 
 @Composable
 fun AlertCard(
@@ -139,7 +153,7 @@ fun AlertCard(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.08f)),
+        colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.06f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
@@ -148,81 +162,117 @@ fun AlertCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Icon
             Box(
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(52.dp)
                     .background(
-                        color = color.copy(alpha = 0.15f),
-                        shape = RoundedCornerShape(12.dp)
+                        color = color.copy(alpha = 0.12f),
+                        shape = RoundedCornerShape(14.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(
-                        when (alert.alertType) {
-                            "alarm" -> R.drawable.ic_alarm_sound
-                            else -> R.drawable.ic_notification
-                        }
-                    ),
+                    painter = painterResource(alert.weatherFilter.icon()),
                     contentDescription = null,
                     tint = color,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(26.dp)
                 )
             }
 
             Spacer(modifier = Modifier.width(12.dp))
-
-            // Text info
             Column(modifier = Modifier.weight(1f)) {
-                // Alert type badge
-                Box(
-                    modifier = Modifier
-                        .background(
-                            color = color.copy(alpha = 0.15f),
-                            shape = RoundedCornerShape(6.dp)
-                        )
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                ) {
-                    Text(
-                        text = alert.alertType.replaceFirstChar { it.uppercase() },
-                        fontFamily = PlusJakartaSansFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        color = color,
-                        fontSize = 10.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Date
                 Text(
-                    text = alert.dateLabel,
+                    text = alert.weatherFilter.displayName(),
                     fontFamily = PlusJakartaSansFontFamily,
                     fontWeight = FontWeight.Bold,
                     color = Black100,
-                    fontSize = 14.sp
+                    fontSize = 15.sp
                 )
 
-                Spacer(modifier = Modifier.height(2.dp))
+                // date  e.g. "24 May, 2025"
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_schedule),
+                        contentDescription = null,
+                        tint = Gray100,
+                        modifier = Modifier.size(12.dp)
+                    )
+                    Text(
+                        text = alert.dateLabel,
+                        fontFamily = PlusJakartaSansFontFamily,
+                        color = Gray100,
+                        fontSize = 12.sp
+                    )
+                }
 
-                // Time range
-                Text(
-                    text = "${alert.fromLabel} - ${alert.toLabel}",
-                    fontFamily = PlusJakartaSansFontFamily,
-                    color = Gray100,
-                    fontSize = 12.sp
-                )
+                // time range  e.g. "08:00 AM - 06:00 PM"
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier.padding(top = 2.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_alert_type),
+                        contentDescription = null,
+                        tint = Gray100,
+                        modifier = Modifier.size(12.dp)
+                    )
+                    Text(
+                        text = "${alert.fromLabel} - ${alert.toLabel}",
+                        fontFamily = PlusJakartaSansFontFamily,
+                        color = Gray100,
+                        fontSize = 12.sp
+                    )
+                }
             }
 
-            // Delete button
-            IconButton(onClick = onDeleteClick) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_delete),
-                    contentDescription = "Delete Alert",
-                    tint = Color.Red.copy(alpha = 0.7f),
-                    modifier = Modifier.size(20.dp)
-                )
+            // ── Alert type badge + delete ─────────────────────────────────────
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                // badge: "Alarm" or "Notification"
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = color.copy(alpha = 0.12f),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                if (alert.alertType == "alarm") R.drawable.ic_alarm_sound
+                                else R.drawable.ic_notification
+                            ),
+                            contentDescription = null,
+                            tint = color,
+                            modifier = Modifier.size(12.dp)
+                        )
+                        Text(
+                            text = alert.alertType.replaceFirstChar { it.uppercase() },
+                            fontFamily = PlusJakartaSansFontFamily,
+                            fontWeight = FontWeight.SemiBold,
+                            color = color,
+                            fontSize = 10.sp
+                        )
+                    }
+                }
+
+                // delete button
+                IconButton(onClick = onDeleteClick) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_delete),
+                        contentDescription = "Delete Alert",
+                        tint = Color.Red.copy(alpha = 0.7f),
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
             }
         }
     }

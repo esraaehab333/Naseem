@@ -12,36 +12,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
 
 @Composable
-fun AlertActionButton(color: Color){
+fun AlertActionButton(color: Color ,onDeleteButton: () -> Unit ){
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Button(
-            onClick = {
-                //todo: edit alert
-            },
-            modifier = Modifier.weight(1f).height(44.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF1F4F9)),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Text(
-                "Edit Rules",
-                color = Black100,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = PlusJakartaSansFontFamily,
-                fontSize = 12.sp
-            )
-        }
-        Button(
-            onClick = {
-                //todo:switch
-            },
+            onClick = onDeleteButton,
             modifier = Modifier.weight(1f).height(44.dp),
             colors = ButtonDefaults.buttonColors(containerColor = color),
             shape = RoundedCornerShape(12.dp)

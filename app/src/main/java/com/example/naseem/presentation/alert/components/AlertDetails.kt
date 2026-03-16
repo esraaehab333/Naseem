@@ -19,12 +19,12 @@ import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 
 @Composable
-fun AlertDetails(location:String, timeRange:String, color: Color){
+fun AlertDetails(location:String, timeRange:String, color: Color , date:String){
     Column(
         modifier = Modifier.padding(start = 10.dp, top = 4.dp)
     ) {
         Text(
-            text = "Today • $location",
+            text = "$date • $location",
             color = Gray100,
             fontWeight = FontWeight.Normal,
             fontFamily = PlusJakartaSansFontFamily,
