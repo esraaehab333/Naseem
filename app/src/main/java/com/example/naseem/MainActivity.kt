@@ -86,7 +86,8 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         if (currentRoute != Routes.NEXT7DAYS &&
                             currentRoute != Routes.ADDFAVORITEPLACE &&
-                            currentRoute != Routes.ADDWEATHERALERT
+                            currentRoute != Routes.ADDWEATHERALERT&&
+                            currentRoute!= Routes.FAVDETAILSHOME
                         ) {
                             BottomNavigationBar(
                                 navController = navController,

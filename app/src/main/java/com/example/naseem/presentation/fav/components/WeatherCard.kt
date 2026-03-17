@@ -1,5 +1,6 @@
 package com.example.naseem.presentation.fav.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -25,10 +26,13 @@ import com.example.naseem.ui.theme.White100
 fun WeatherCard(
     place: FavoriteModel,
     color: Color,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onClick:()->Unit,
 ) {
     OutlinedCard(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickable {
+            onClick()
+        },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.outlinedCardColors(containerColor = White100),
         border = CardDefaults.outlinedCardBorder().copy(

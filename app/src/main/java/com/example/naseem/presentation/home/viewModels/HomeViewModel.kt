@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.naseem.LocationHelper
 import com.example.naseem.common.ApiState
 import com.example.naseem.data.datasource.WeatherRepository
 import com.example.naseem.data.dto.ForecastResponse
@@ -19,7 +20,7 @@ class HomeViewModel(
 ) : ViewModel() {
 
     private val weatherRepository = WeatherRepository(context.applicationContext)
-
+    private val locationHelper = LocationHelper(context)
     private val _isLoading = MutableStateFlow<Boolean>(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
@@ -63,6 +64,27 @@ class HomeViewModel(
                 else -> {}
             }
             _isLoading.value = false
+        }
+    }
+    fun getLocationAndFetchWeather() {
+        _isLoading.value = true
+
+        locationHelper.getCurrentLocation { lat, lon ->
+
+            viewModelScope.launch {
+                val weatherResult = weatherRepository.getCurrentWeather(lat, lon)
+                val forecastResult = weatherRepository.getFiveDayForecast(lat, lon)
+
+                if (weatherResult is ApiState.Success) {
+                    _weatherData.value = weatherResult.data
+                }
+
+                if (forecastResult is ApiState.Success) {
+                    _forecastData.value = forecastResult.data
+                }
+
+                _isLoading.value = false
+            }
         }
     }
 }

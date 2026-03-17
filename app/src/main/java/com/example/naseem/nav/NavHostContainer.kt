@@ -36,6 +36,21 @@ fun NavHostContainer(
         startDestination = Routes.HOME,
         modifier = Modifier.padding(paddingValues = padding),
         builder = {
+            composable(Routes.FAVDETAILSHOME) { backStackEntry ->
+                val lat = backStackEntry.arguments?.getString("lat")?.toDoubleOrNull()
+                val lon = backStackEntry.arguments?.getString("lon")?.toDoubleOrNull()
+
+                HomeScreen(
+                    color = color,
+                    viewModel = viewModel,
+                    image = image,
+                    onNext7DaysClick = {
+                        navController.navigate(Routes.NEXT7DAYS)
+                    },
+                    lat = lat,
+                    lon = lon
+                )
+            }
             composable(Routes.HOME) {
                 HomeScreen(
                     color = color,
@@ -59,6 +74,9 @@ fun NavHostContainer(
                 FavoriteScreen(
                     color = color,
                     viewModel = favoriteViewModel,
+                    onFavDetailsClick = { lat, lon ->
+                        navController.navigate("favDetailsHome/$lat/$lon")
+                    },
                     onFloatingActionButtonClicked = {
                         navController.navigate(Routes.ADDFAVORITEPLACE)
                     }

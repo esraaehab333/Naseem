@@ -99,7 +99,7 @@ fun WeatherAlertScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             EmptyStateScreen(
-                                icon = R.drawable.ic_alert,
+                                icon = R.drawable.ic_alert_type,
                                 title = "No Alerts Yet",
                                 subtitle = "Tap + to add your first weather alert",
                                 color = color

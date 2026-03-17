@@ -10,4 +10,5 @@ object Routes {
     const val NEXT7DAYS = "next_7_days"
     const val ADDFAVORITEPLACE = "add_favorite_place"
     const val ADDWEATHERALERT ="add_weather_alert"
+    const val FAVDETAILSHOME = "favDetailsHome/{lat}/{lon}"
 }
