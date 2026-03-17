@@ -22,7 +22,7 @@ class FavoriteViewModelTest {
 
     private lateinit var repository: WeatherRepository
     private lateinit var viewModel: FavoriteViewModel
-    private val testDispatcher = UnconfinedTestDispatcher()  // ← UnconfinedTestDispatcher بدل Standard
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val entity = FavoriteEntity("Cairo", "Cairo, Egypt", 30.0, 31.0)
     private val model = FavoriteModel(entity)
