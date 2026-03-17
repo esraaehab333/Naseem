@@ -23,7 +23,7 @@ class FavWeatherLocalDataSourceTest {
     @Before
     fun setup() {
         dao = mockk(relaxed = true)
-        localDataSource = FavWeatherLocalDataSource(dao)  // ← inject مباشرة، بدون reflection
+        localDataSource = FavWeatherLocalDataSource(dao)
     }
 
     @Test

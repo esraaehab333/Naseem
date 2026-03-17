@@ -2,11 +2,11 @@ package com.example.naseem.utils
 
 import kotlin.math.roundToInt
 
-fun convertTemp(kelvinTemp: Double, unit: String): String {
+fun convertTemp(celsiusTemp: Double, unit: String): String {
     return when (unit) {
-        "celsius"    -> "${(kelvinTemp - 273.15).roundToInt()}°C"
-        "fahrenheit" -> "${((kelvinTemp - 273.15) * 9 / 5 + 32).roundToInt()}°F"
-        else         -> "${kelvinTemp.roundToInt()} K"
+        "fahrenheit" -> "${(celsiusTemp * 9 / 5 + 32).roundToInt()}°F"
+        "kelvin"     -> "${(celsiusTemp + 273.15).roundToInt()} K"
+        else         -> "${celsiusTemp.roundToInt()}°C"
     }
 }
 
