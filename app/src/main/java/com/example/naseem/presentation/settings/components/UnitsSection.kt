@@ -23,9 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,12 +42,15 @@ fun UnitSection(
     title: String,
     icon: Int,
     options: List<String>,
+    optionKeys: List<String>,
+    selectedKey: String,
+    onOptionSelected: (String) -> Unit,
     primaryColor: Color,
     segmentBackgroundColor: Color
 ) {
-    var selectedIndex by remember { mutableIntStateOf(0) }
+    val selectedIndex = optionKeys.indexOf(selectedKey).coerceAtLeast(0)
 
-    Column{
+    Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,
@@ -103,7 +104,7 @@ fun UnitSection(
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = null
-                            ) { selectedIndex = index },
+                            ) { onOptionSelected(optionKeys[index]) },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(

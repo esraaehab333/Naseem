@@ -18,6 +18,7 @@ import com.example.naseem.presentation.fav.view.AddFavoritePlaceScreen
 import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel
 import com.example.naseem.presentation.home.view.HomeScreen
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
+import com.example.naseem.presentation.settings.viewModel.SettingsViewModel
 import com.example.naseem.utils.Routes
 
 @Composable
@@ -26,6 +27,7 @@ fun NavHostContainer(
     padding: PaddingValues,
     color: Color,
     image: Int,
+    settingsViewModel:SettingsViewModel,
     viewModel: HomeViewModel,
     favoriteViewModel: FavoriteViewModel,
     alertViewModel: WeatherAlertViewModel,
@@ -41,6 +43,7 @@ fun NavHostContainer(
                 val lon = backStackEntry.arguments?.getString("lon")?.toDoubleOrNull()
 
                 HomeScreen(
+                    settingsViewModel = settingsViewModel,
                     color = color,
                     viewModel = viewModel,
                     image = image,
@@ -56,6 +59,7 @@ fun NavHostContainer(
                     color = color,
                     viewModel = viewModel,
                     image = image,
+                    settingsViewModel = settingsViewModel,
                     onNext7DaysClick = {
                         navController.navigate(Routes.NEXT7DAYS)
                     }
@@ -83,7 +87,9 @@ fun NavHostContainer(
                 )
             }
             composable(Routes.SETTINGS) {
+
                 SettingsScreen(
+                    settingsViewModel = settingsViewModel,
                     color = color,
                     onLanguageChange = onLanguageChange
                 )

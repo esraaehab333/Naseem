@@ -28,6 +28,8 @@ import com.example.naseem.presentation.fav.viewModels.FavoriteViewModelFactory
 import com.example.naseem.presentation.home.componets.BottomNavigationBar
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
 import com.example.naseem.presentation.home.viewModels.HomeViewModelFactory
+import com.example.naseem.presentation.settings.viewModel.SettingsViewModel
+import com.example.naseem.presentation.settings.viewModel.SettingsViewModelFactory
 import com.example.naseem.ui.theme.NaseemTheme
 import com.example.naseem.utils.Routes
 import com.example.naseem.utils.getThemeConfig
@@ -72,6 +74,9 @@ class MainActivity : ComponentActivity() {
             val favoriteViewModel: FavoriteViewModel = viewModel(
                 factory = FavoriteViewModelFactory(WeatherRepository(context))
             )
+            val settingsViewModel: SettingsViewModel = viewModel(
+                factory = SettingsViewModelFactory(context)
+            )
             val alertViewModel: WeatherAlertViewModel = viewModel(factory = WeatherAlertViewModelFactory(context))
 
             val weatherData by viewModel.weatherData.collectAsState()
@@ -104,6 +109,7 @@ class MainActivity : ComponentActivity() {
                         padding = padding,
                         color = dynamicColor.color,
                         viewModel = viewModel,
+                        settingsViewModel = settingsViewModel,
                         favoriteViewModel = favoriteViewModel,
                         alertViewModel = alertViewModel,
                         image = dynamicColor.imageRes,

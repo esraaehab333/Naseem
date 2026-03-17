@@ -72,7 +72,7 @@ fun WeatherHeaderSection(image:Int,address:String ,tempDegree:String,date:String
                 text = tempDegree,
                 color = White100,
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 96.sp,
+                fontSize = 80.sp,
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
             )

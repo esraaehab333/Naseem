@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -15,12 +17,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.R
+import com.example.naseem.presentation.settings.viewModel.SettingsViewModel
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
 
 @Composable
-fun TemperatureAndWindSpeedSection(color: Color) {
+fun TemperatureAndWindSpeedSection(
+    color: Color,
+    settingsViewModel: SettingsViewModel
+) {
+    val tempUnit by settingsViewModel.temperatureUnit.collectAsState()
+    val windUnit by settingsViewModel.windSpeedUnit.collectAsState()
 
     Text(
         text = stringResource(R.string.units),
@@ -38,11 +46,9 @@ fun TemperatureAndWindSpeedSection(color: Color) {
         color = White100,
         shadowElevation = 1.1.dp,
     ) {
-
         Column(
             modifier = Modifier.padding(20.dp)
-        ){
-
+        ) {
             UnitSection(
                 title = stringResource(R.string.temperature),
                 icon = R.drawable.ic_temperature,
@@ -51,6 +57,9 @@ fun TemperatureAndWindSpeedSection(color: Color) {
                     stringResource(R.string.fahrenheit),
                     stringResource(R.string.kelvin)
                 ),
+                optionKeys = listOf("celsius", "fahrenheit", "kelvin"),
+                selectedKey = tempUnit,
+                onOptionSelected = { settingsViewModel.setTemperatureUnit(it) },
                 primaryColor = color,
                 segmentBackgroundColor = Gray100.copy(alpha = 0.1f)
             )
@@ -64,6 +73,9 @@ fun TemperatureAndWindSpeedSection(color: Color) {
                     stringResource(R.string.meter_per_sec),
                     stringResource(R.string.miles_per_hour)
                 ),
+                optionKeys = listOf("meter_per_sec", "miles_per_hour"),
+                selectedKey = windUnit,
+                onOptionSelected = { settingsViewModel.setWindSpeedUnit(it) },
                 primaryColor = color,
                 segmentBackgroundColor = Gray100.copy(alpha = 0.1f)
             )
