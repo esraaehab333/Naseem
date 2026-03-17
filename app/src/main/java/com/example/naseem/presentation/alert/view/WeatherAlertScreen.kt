@@ -6,12 +6,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -20,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.naseem.R
 import com.example.naseem.common.ApiState
 import com.example.naseem.data.model.WeatherAlertModel
+import com.example.naseem.presentation.alert.components.AlertScheduler
 import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModel
 import com.example.naseem.presentation.fav.components.EmptyStateScreen
 import com.example.naseem.ui.theme.Black100
@@ -35,6 +35,7 @@ fun WeatherAlertScreen(
     onFloatingActionButtonClicked: () -> Unit
 ) {
     val state by viewModel.alertsState.collectAsState()
+    val context = LocalContext.current
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -64,7 +65,7 @@ fun WeatherAlertScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "TEEEEEt",
+                text = "Weather Alerts",
                 fontFamily = PlusJakartaSansFontFamily,
                 fontWeight = FontWeight.Bold,
                 color = Black100,
@@ -73,7 +74,7 @@ fun WeatherAlertScreen(
             )
 
             Text(
-                text = "Test",
+                text = "Get notified when severe weather hits",
                 fontSize = 12.sp,
                 color = Gray100,
                 fontFamily = PlusJakartaSansFontFamily,
@@ -82,7 +83,10 @@ fun WeatherAlertScreen(
 
             when (state) {
                 is ApiState.Loading -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
                         CircularProgressIndicator(color = color)
                     }
                 }
@@ -96,8 +100,8 @@ fun WeatherAlertScreen(
                         ) {
                             EmptyStateScreen(
                                 icon = R.drawable.ic_alert,
-                                title = "Empty",
-                                subtitle = "subtitle",
+                                title = "No Alerts Yet",
+                                subtitle = "Tap + to add your first weather alert",
                                 color = color
                             )
                         }
@@ -115,6 +119,7 @@ fun WeatherAlertScreen(
                                     alert = alert,
                                     color = color,
                                     onDeleteClick = {
+                                        AlertScheduler.cancelAlert(context, alert.createdAt)
                                         viewModel.deleteAlert(alert)
                                     }
                                 )
@@ -124,12 +129,25 @@ fun WeatherAlertScreen(
                 }
 
                 is ApiState.Failure -> {
-                    Text(stringResource(R.string.something_went_wrong), color = Color.Red)
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            stringResource(R.string.something_went_wrong),
+                            color = Color.Red,
+                            fontFamily = PlusJakartaSansFontFamily
+                        )
+                    }
                 }
             }
         }
     }
 }
+
+
+// ── helpers ──────────────────────────────────────────────────────────────────
+
 private fun WeatherFilter.icon(): Int = when (this) {
     WeatherFilter.RAIN         -> R.drawable.ic_rainy
     WeatherFilter.WIND         -> R.drawable.ic_wind
@@ -144,16 +162,31 @@ private fun WeatherFilter.displayName(): String = when (this) {
     WeatherFilter.THUNDERSTORM -> "Thunderstorm"
 }
 
+
+// ── AlertCard ────────────────────────────────────────────────────────────────
+
 @Composable
 fun AlertCard(
     alert: WeatherAlertModel,
     color: Color,
     onDeleteClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
+    val hasTriggered = remember(alert.createdAt) {
+        context.getSharedPreferences("triggered_alerts", android.content.Context.MODE_PRIVATE)
+            .getBoolean("triggered_${alert.createdAt}", false)
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.06f)),
+        colors = CardDefaults.cardColors(
+            containerColor = if (hasTriggered)
+                color.copy(alpha = 0.14f)
+            else
+                color.copy(alpha = 0.06f)
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
@@ -162,13 +195,12 @@ fun AlertCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
+            // weather icon box
             Box(
                 modifier = Modifier
                     .size(52.dp)
-                    .background(
-                        color = color.copy(alpha = 0.12f),
-                        shape = RoundedCornerShape(14.dp)
-                    ),
+                    .background(color.copy(alpha = 0.12f), RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -180,16 +212,56 @@ fun AlertCard(
             }
 
             Spacer(modifier = Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = alert.weatherFilter.displayName(),
-                    fontFamily = PlusJakartaSansFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    color = Black100,
-                    fontSize = 15.sp
-                )
 
-                // date  e.g. "24 May, 2025"
+            Column(modifier = Modifier.weight(1f)) {
+
+                // title row + triggered chip
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = alert.weatherFilter.displayName(),
+                        fontFamily = PlusJakartaSansFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        color = Black100,
+                        fontSize = 15.sp
+                    )
+
+                    if (hasTriggered) {
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    color = Color(0xFFFF6B35).copy(alpha = 0.15f),
+                                    shape = RoundedCornerShape(6.dp)
+                                )
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(3.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(6.dp)
+                                        .background(
+                                            Color(0xFFFF6B35),
+                                            RoundedCornerShape(50.dp)
+                                        )
+                                )
+                                Text(
+                                    text = "Triggered",
+                                    fontFamily = PlusJakartaSansFontFamily,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color(0xFFFF6B35),
+                                    fontSize = 9.sp
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // date row
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -209,7 +281,7 @@ fun AlertCard(
                     )
                 }
 
-                // time range  e.g. "08:00 AM - 06:00 PM"
+                // time range row
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -222,7 +294,7 @@ fun AlertCard(
                         modifier = Modifier.size(12.dp)
                     )
                     Text(
-                        text = "${alert.fromLabel} - ${alert.toLabel}",
+                        text = "${alert.fromLabel} – ${alert.toLabel}",
                         fontFamily = PlusJakartaSansFontFamily,
                         color = Gray100,
                         fontSize = 12.sp
@@ -230,15 +302,11 @@ fun AlertCard(
                 }
             }
 
-            // ── Alert type badge + delete ─────────────────────────────────────
+            // badge + delete
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                // badge: "Alarm" or "Notification"
                 Box(
                     modifier = Modifier
-                        .background(
-                            color = color.copy(alpha = 0.12f),
-                            shape = RoundedCornerShape(8.dp)
-                        )
+                        .background(color.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
                     Row(
@@ -264,7 +332,6 @@ fun AlertCard(
                     }
                 }
 
-                // delete button
                 IconButton(onClick = onDeleteClick) {
                     Icon(
                         painter = painterResource(R.drawable.ic_delete),

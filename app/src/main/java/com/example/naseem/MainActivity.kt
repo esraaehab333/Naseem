@@ -1,15 +1,19 @@
 package com.example.naseem
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -30,6 +34,8 @@ import java.util.Locale
 
 class MainActivity : ComponentActivity() {
 
+    private lateinit var requestPermissionsLauncher: ActivityResultLauncher<Array<String>>
+
     override fun attachBaseContext(newBase: Context) {
         val lang = newBase
             .getSharedPreferences("settings", MODE_PRIVATE)
@@ -44,14 +50,27 @@ class MainActivity : ComponentActivity() {
         return context.createConfigurationContext(config)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
+
+        requestPermissionsLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+                val notificationGranted =
+                    permissions[android.Manifest.permission.POST_NOTIFICATIONS] ?: false
+                val locationGranted =
+                    permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] ?: false
+                if (!notificationGranted || !locationGranted) {
+                    finish()
+                }
+            }
+        checkPermissions()
         enableEdgeToEdge()
         setContent {
             val context = LocalContext.current
+
             val viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory(context))
             val favoriteViewModel: FavoriteViewModel = viewModel(factory = FavoriteViewModelFactory(context))
-            val alertViewModel:WeatherAlertViewModel = viewModel(factory = WeatherAlertViewModelFactory(context))
+            val alertViewModel: WeatherAlertViewModel = viewModel(factory = WeatherAlertViewModelFactory(context))
+
             val weatherData by viewModel.weatherData.collectAsState()
             val currentTemp = weatherData?.main?.temp ?: 20.0
             val dynamicColor = getThemeConfig(currentTemp)
@@ -65,7 +84,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     contentWindowInsets = WindowInsets(0, 0, 0, 0),
                     bottomBar = {
-                        if (currentRoute != Routes.NEXT7DAYS && currentRoute != Routes.ADDFAVORITEPLACE&& currentRoute != Routes.ADDWEATHERALERT) {
+                        if (currentRoute != Routes.NEXT7DAYS &&
+                            currentRoute != Routes.ADDFAVORITEPLACE &&
+                            currentRoute != Routes.ADDWEATHERALERT
+                        ) {
                             BottomNavigationBar(
                                 navController = navController,
                                 color = dynamicColor.color
@@ -91,6 +113,21 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+    }
+    private fun checkPermissions() {
+        val permissions = mutableListOf<String>()
+
+        if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(android.Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        if (permissions.isNotEmpty()) {
+            requestPermissionsLauncher.launch(permissions.toTypedArray())
         }
     }
 }

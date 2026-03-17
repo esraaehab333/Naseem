@@ -2,41 +2,24 @@ package com.example.naseem.presentation.alert.view
 
 import WeatherTriggerSection
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.R
 import com.example.naseem.data.model.WeatherAlertModel
+import com.example.naseem.presentation.alert.components.AlertScheduler
 import com.example.naseem.presentation.alert.components.AlertTypeSection
 import com.example.naseem.presentation.alert.components.ScheduleAndDurationSection
 import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModel
@@ -51,13 +34,15 @@ fun AddWeatherAlertScreen(
     viewModel: WeatherAlertViewModel,
     onBackButtonClick: () -> Unit
 ) {
-    var dateMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var fromMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var toMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var dateLabel by remember { mutableStateOf("") }
-    var fromLabel by remember { mutableStateOf("08:00 AM") }
-    var toLabel by remember { mutableStateOf("06:00 PM") }
-    var alertType by remember { mutableStateOf("notification") }
+    val context = LocalContext.current
+
+    var dateMillis  by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    var fromMillis  by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    var toMillis    by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    var dateLabel   by remember { mutableStateOf("") }
+    var fromLabel   by remember { mutableStateOf("08:00 AM") }
+    var toLabel     by remember { mutableStateOf("06:00 PM") }
+    var alertType   by remember { mutableStateOf("notification") }
     var selectedFilter by remember { mutableStateOf<WeatherFilter?>(null) }
 
     Scaffold(
@@ -99,10 +84,10 @@ fun AddWeatherAlertScreen(
                 color = color,
                 onDateMillisChanged = { dateMillis = it },
                 onFromMillisChanged = { fromMillis = it },
-                onToMillisChanged   = { toMillis = it },
-                onDateLabelChanged  = { dateLabel = it },
-                onFromLabelChanged  = { fromLabel = it },
-                onToLabelChanged    = { toLabel = it },
+                onToMillisChanged   = { toMillis   = it },
+                onDateLabelChanged  = { dateLabel  = it },
+                onFromLabelChanged  = { fromLabel  = it },
+                onToLabelChanged    = { toLabel    = it },
             )
 
             AlertTypeSection(
@@ -119,19 +104,29 @@ fun AddWeatherAlertScreen(
             Button(
                 onClick = {
                     selectedFilter?.let { filter ->
-                        viewModel.addAlert(
-                            WeatherAlertModel(
-                                fromTimeMillis = fromMillis,
-                                toTimeMillis   = toMillis,
-                                dateLabel      = dateLabel,
-                                fromLabel      = fromLabel,
-                                toLabel        = toLabel,
-                                alertType      = alertType,
-                                weatherFilter  = filter,
-                                latitude       = 0.0,
-                                longitude      = 0.0,
-                            )
+
+                        val alert = WeatherAlertModel(
+                            fromTimeMillis = fromMillis,
+                            toTimeMillis   = toMillis,
+                            dateLabel      = dateLabel,
+                            fromLabel      = fromLabel,
+                            toLabel        = toLabel,
+                            alertType      = alertType,
+                            weatherFilter  = filter,
+                            latitude       = 0.0,
+                            longitude      = 0.0
+                            // createdAt defaults to System.currentTimeMillis()
                         )
+
+                        viewModel.addAlert(alert)
+
+                        AlertScheduler.scheduleAlert(
+                            context     = context,
+                            triggerTime = fromMillis,
+                            message     = filter.displayName(),
+                            alertId     = alert.createdAt
+                        )
+
                         onBackButtonClick()
                     }
                 },
@@ -140,7 +135,7 @@ fun AddWeatherAlertScreen(
                     .fillMaxWidth()
                     .height(52.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = color,
+                    containerColor         = color,
                     disabledContainerColor = color.copy(alpha = 0.4f)
                 ),
                 shape = RoundedCornerShape(16.dp)
@@ -158,4 +153,12 @@ fun AddWeatherAlertScreen(
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
+}
+
+// needed here too since AddWeatherAlertScreen calls it
+private fun WeatherFilter.displayName(): String = when (this) {
+    WeatherFilter.RAIN         -> "Heavy Rain"
+    WeatherFilter.WIND         -> "Strong Wind"
+    WeatherFilter.SNOW         -> "Snowfall"
+    WeatherFilter.THUNDERSTORM -> "Thunderstorm"
 }
