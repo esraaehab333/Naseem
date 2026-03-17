@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.R
 import com.example.naseem.data.model.WeatherAlertModel
-import com.example.naseem.presentation.alert.components.AlertScheduler
+import com.example.naseem.worker.AlertScheduler
 import com.example.naseem.presentation.alert.components.AlertTypeSection
 import com.example.naseem.presentation.alert.components.ScheduleAndDurationSection
 import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModel

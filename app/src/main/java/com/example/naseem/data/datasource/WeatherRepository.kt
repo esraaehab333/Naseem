@@ -3,21 +3,31 @@ package com.example.naseem.data.datasource
 import android.content.Context
 import com.example.naseem.BuildConfig
 import com.example.naseem.common.ApiState
-import com.example.naseem.data.datasource.local.alert.AlertWeatherDao
 import com.example.naseem.data.datasource.local.alert.AlertWeatherLocalDataSource
 import com.example.naseem.data.datasource.local.fav.FavWeatherLocalDataSource
 import com.example.naseem.data.datasource.remote.WeatherRemoteDataSource
+import com.example.naseem.data.db.FavoriteDatabase
 import com.example.naseem.data.entity.FavoriteEntity
 import com.example.naseem.data.dto.WeatherResponse
 import com.example.naseem.data.dto.ForecastResponse
 import com.example.naseem.data.entity.AlertEntity
 import kotlinx.coroutines.flow.Flow
 
-class WeatherRepository(context: Context) {
-    private val remoteDataSource = WeatherRemoteDataSource()
-    private val favLocalDataSource = FavWeatherLocalDataSource(context)
-    private val alertLocalDataSource = AlertWeatherLocalDataSource(context)
-    val apiKey = BuildConfig.WEATHER_API_KEY
+class WeatherRepository(
+    private val remoteDataSource: WeatherRemoteDataSource,
+    private val favLocalDataSource: FavWeatherLocalDataSource,
+    private val alertLocalDataSource: AlertWeatherLocalDataSource,
+    private val apiKey: String
+) {
+    constructor(context: Context) : this(
+        remoteDataSource = WeatherRemoteDataSource(),
+        favLocalDataSource = FavWeatherLocalDataSource(
+            FavoriteDatabase.getInstance(context).favWeatherDao()
+        ),
+        alertLocalDataSource = AlertWeatherLocalDataSource(context),
+        apiKey = BuildConfig.WEATHER_API_KEY
+    )
+
     suspend fun getCurrentWeather(lat: Double, lon: Double): ApiState<WeatherResponse> {
         return remoteDataSource.getCurrentWeather(lat, lon, apiKey)
     }

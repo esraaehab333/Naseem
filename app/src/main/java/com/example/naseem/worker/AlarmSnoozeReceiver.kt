@@ -1,11 +1,10 @@
-package com.example.naseem
+package com.example.naseem.worker
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.*
-import com.example.naseem.presentation.alert.components.WeatherAlertWorker
 import java.util.concurrent.TimeUnit
 
 class AlarmSnoozeReceiver : BroadcastReceiver() {
