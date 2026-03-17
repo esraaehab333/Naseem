@@ -3,16 +3,20 @@ package com.example.naseem.data.datasource
 import android.content.Context
 import com.example.naseem.BuildConfig
 import com.example.naseem.common.ApiState
-import com.example.naseem.data.datasource.local.FavWeatherLocalDataSource
+import com.example.naseem.data.datasource.local.alert.AlertWeatherDao
+import com.example.naseem.data.datasource.local.alert.AlertWeatherLocalDataSource
+import com.example.naseem.data.datasource.local.fav.FavWeatherLocalDataSource
 import com.example.naseem.data.datasource.remote.WeatherRemoteDataSource
 import com.example.naseem.data.entity.FavoriteEntity
 import com.example.naseem.data.dto.WeatherResponse
 import com.example.naseem.data.dto.ForecastResponse
+import com.example.naseem.data.entity.AlertEntity
 import kotlinx.coroutines.flow.Flow
 
 class WeatherRepository(context: Context) {
     private val remoteDataSource = WeatherRemoteDataSource()
-    private val localDataSource = FavWeatherLocalDataSource(context)
+    private val favLocalDataSource = FavWeatherLocalDataSource(context)
+    private val alertLocalDataSource = AlertWeatherLocalDataSource(context)
     val apiKey = BuildConfig.WEATHER_API_KEY
     suspend fun getCurrentWeather(lat: Double, lon: Double): ApiState<WeatherResponse> {
         return remoteDataSource.getCurrentWeather(lat, lon, apiKey)
@@ -23,14 +27,26 @@ class WeatherRepository(context: Context) {
     }
 
     suspend fun insertWeatherToFav(favorite: FavoriteEntity) {
-        localDataSource.insertFavWeather(favorite)
+        favLocalDataSource.insertFavWeather(favorite)
     }
 
     suspend fun deleteWeatherFromFav(favorite: FavoriteEntity) {
-        localDataSource.deleteFavWeather(favorite)
+        favLocalDataSource.deleteFavWeather(favorite)
     }
 
     fun getAllFavWeather(): Flow<List<FavoriteEntity>> {
-        return localDataSource.getAllFavWeather()
+        return favLocalDataSource.getAllFavWeather()
+    }
+
+    suspend fun insertWeatherToAlert(alert: AlertEntity) {
+        alertLocalDataSource.insertAlertWeather(alert)
+    }
+
+    suspend fun deleteWeatherFromAlert(alert: AlertEntity) {
+        alertLocalDataSource.deleteAlertWeather(alert)
+    }
+
+    fun getAllAlertWeather(): Flow<List<AlertEntity>> {
+        return alertLocalDataSource.getAllAlertWeather()
     }
 }

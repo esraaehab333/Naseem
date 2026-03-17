@@ -16,10 +16,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,8 +38,8 @@ fun TriggerCard(
     subtitle: String,
     isChecked: Boolean,
     color: Color,
+    onCheckedChange: (Boolean) -> Unit,
 ) {
-    var checked by remember { mutableStateOf(isChecked) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,7 +49,8 @@ fun TriggerCard(
                 width = 1.dp,
                 brush = SolidColor(Gray100.copy(alpha = 0.1f)),
                 shape = RoundedCornerShape(20.dp)
-            ).padding(16.dp),
+            )
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -71,7 +68,10 @@ fun TriggerCard(
             )
         }
         Column(
-            modifier = Modifier.padding(horizontal = 10.dp).weight(1f)) {
+            modifier = Modifier
+                .padding(horizontal = 10.dp)
+                .weight(1f)
+        ) {
             Text(
                 text = title,
                 fontWeight = FontWeight.Bold,
@@ -89,8 +89,8 @@ fun TriggerCard(
             )
         }
         Switch(
-            checked = checked,
-            onCheckedChange = { checked = it },
+            checked = isChecked,
+            onCheckedChange = onCheckedChange,
             colors = SwitchDefaults.colors(
                 checkedThumbColor = White100,
                 checkedTrackColor = color

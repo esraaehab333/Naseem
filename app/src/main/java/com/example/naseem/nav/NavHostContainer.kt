@@ -10,7 +10,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.naseem.presentation.alert.view.AlertScreen
+import com.example.naseem.presentation.alert.view.AddWeatherAlertScreen
+import com.example.naseem.presentation.alert.view.WeatherAlertScreen
+import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModel
 import com.example.naseem.presentation.settings.view.SettingsScreen
 import com.example.naseem.presentation.fav.view.AddFavoritePlaceScreen
 import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel
@@ -26,6 +28,7 @@ fun NavHostContainer(
     image: Int,
     viewModel: HomeViewModel,
     favoriteViewModel: FavoriteViewModel,
+    alertViewModel: WeatherAlertViewModel,
     onLanguageChange: (String) -> Unit
 ) {
     NavHost(
@@ -44,10 +47,11 @@ fun NavHostContainer(
                 )
             }
             composable(Routes.ALERT) {
-                AlertScreen(
+                WeatherAlertScreen(
                     color=color,
-                    onBackButtonClick = {
-                        navController.popBackStack()
+                    viewModel=alertViewModel,
+                    onFloatingActionButtonClicked = {
+                        navController.navigate(Routes.ADDWEATHERALERT)
                     }
                 )
             }
@@ -70,6 +74,15 @@ fun NavHostContainer(
                 Next7DaysScreen(
                     color = color,
                     viewModel = viewModel,
+                    onBackButtonClick = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+            composable(Routes.ADDWEATHERALERT) {
+                AddWeatherAlertScreen(
+                    color = color,
+                    viewModel=alertViewModel,
                     onBackButtonClick = {
                         navController.popBackStack()
                     }

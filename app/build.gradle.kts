@@ -83,4 +83,5 @@ dependencies {
     ksp("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
     implementation("org.osmdroid:osmdroid-android:6.1.18")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 }

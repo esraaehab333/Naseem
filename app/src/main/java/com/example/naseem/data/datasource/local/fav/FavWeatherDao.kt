@@ -1,4 +1,4 @@
-package com.example.naseem.data.datasource.local
+package com.example.naseem.data.datasource.local.fav
 
 import androidx.room.Dao
 import androidx.room.Delete

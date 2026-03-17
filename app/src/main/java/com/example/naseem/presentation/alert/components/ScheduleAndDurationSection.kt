@@ -1,10 +1,7 @@
 package com.example.naseem.presentation.alert.components
 
 import TimeBox
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,19 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
@@ -39,35 +30,65 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.example.naseem.R
 import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScheduleAndDurationSection(color: Color) {
+fun ScheduleAndDurationSection(
+    color: Color,
+    onDateMillisChanged: (Long) -> Unit,
+    onFromMillisChanged: (Long) -> Unit,
+    onToMillisChanged: (Long) -> Unit,
+    onDateLabelChanged: (String) -> Unit,
+    onFromLabelChanged: (String) -> Unit,
+    onToLabelChanged: (String) -> Unit,
+) {
+    // ── today at midnight (start of day) ────────────────────────────────────
+    val todayMillis = remember {
+        Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+    }
+
+    val todayLabel = remember {
+        SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()).format(Date(todayMillis))
+    }
+
     var showDatePicker by remember { mutableStateOf(false) }
     var showTimePickerByFrom by remember { mutableStateOf(false) }
     var showTimePickerByTo by remember { mutableStateOf(false) }
-    var selectedDate by remember { mutableStateOf("24 Oct, 2023") }
+
+    var selectedDate by remember { mutableStateOf(todayLabel) }
     var fromTime by remember { mutableStateOf("08:00") }
     var fromAmPm by remember { mutableStateOf("AM") }
     var toTime by remember { mutableStateOf("06:00") }
     var toAmPm by remember { mutableStateOf("PM") }
 
-    val datePickerState = rememberDatePickerState()
+    // default selection = today
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = todayMillis,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                // allow today and any past day
+                return utcTimeMillis >= todayMillis
+            }
+        }
+    )
+
     val fromTimeState = rememberTimePickerState(initialHour = 8, initialMinute = 0)
     val toTimeState = rememberTimePickerState(initialHour = 18, initialMinute = 0)
 
@@ -90,7 +111,6 @@ fun ScheduleAndDurationSection(color: Color) {
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-
         PickerField(
             label = "DATE",
             value = selectedDate,
@@ -120,14 +140,19 @@ fun ScheduleAndDurationSection(color: Color) {
             )
         }
     }
+
+    // ── Date picker dialog ───────────────────────────────────────────────────
     if (showDatePicker) {
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
                 TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let {
-                        selectedDate = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault())
-                            .format(Date(it))
+                    datePickerState.selectedDateMillis?.let { millis ->
+                        val label = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault())
+                            .format(Date(millis))
+                        selectedDate = label
+                        onDateMillisChanged(millis)
+                        onDateLabelChanged(label)
                     }
                     showDatePicker = false
                 }) { Text("OK", color = color) }
@@ -159,15 +184,27 @@ fun ScheduleAndDurationSection(color: Color) {
             DatePicker(state = datePickerState)
         }
     }
+
+    // ── From time picker ─────────────────────────────────────────────────────
     if (showTimePickerByFrom) {
         TimePickerDialogCustom(
             onDismissRequest = { showTimePickerByFrom = false },
             color = color,
             confirmButton = {
                 TextButton(onClick = {
-                    val hour = if (fromTimeState.hour % 12 == 0) 12 else fromTimeState.hour % 12
-                    fromTime = String.format("%02d:%02d", hour, fromTimeState.minute)
-                    fromAmPm = if (fromTimeState.hour < 12) "AM" else "PM"
+                    val hour = fromTimeState.hour
+                    val minute = fromTimeState.minute
+                    val displayHour = if (hour % 12 == 0) 12 else hour % 12
+                    fromTime = String.format("%02d:%02d", displayHour, minute)
+                    fromAmPm = if (hour < 12) "AM" else "PM"
+                    val cal = Calendar.getInstance().apply {
+                        set(Calendar.HOUR_OF_DAY, hour)
+                        set(Calendar.MINUTE, minute)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
+                    onFromMillisChanged(cal.timeInMillis)
+                    onFromLabelChanged("$fromTime $fromAmPm")
                     showTimePickerByFrom = false
                 }) { Text("OK", color = color) }
             }
@@ -193,15 +230,27 @@ fun ScheduleAndDurationSection(color: Color) {
             )
         }
     }
+
+    // ── To time picker ───────────────────────────────────────────────────────
     if (showTimePickerByTo) {
         TimePickerDialogCustom(
             onDismissRequest = { showTimePickerByTo = false },
             color = color,
             confirmButton = {
                 TextButton(onClick = {
-                    val hour = if (toTimeState.hour % 12 == 0) 12 else toTimeState.hour % 12
-                    toTime = String.format("%02d:%02d", hour, toTimeState.minute)
-                    toAmPm = if (toTimeState.hour < 12) "AM" else "PM"
+                    val hour = toTimeState.hour
+                    val minute = toTimeState.minute
+                    val displayHour = if (hour % 12 == 0) 12 else hour % 12
+                    toTime = String.format("%02d:%02d", displayHour, minute)
+                    toAmPm = if (hour < 12) "AM" else "PM"
+                    val cal = Calendar.getInstance().apply {
+                        set(Calendar.HOUR_OF_DAY, hour)
+                        set(Calendar.MINUTE, minute)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
+                    onToMillisChanged(cal.timeInMillis)
+                    onToLabelChanged("$toTime $toAmPm")
                     showTimePickerByTo = false
                 }) { Text("OK", color = color) }
             }

@@ -27,12 +27,12 @@ fun TimePickerDialogCustom(
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(
-            usePlatformDefaultWidth = false // ✅ المفتاح
+            usePlatformDefaultWidth = false
         )
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth(0.85f), // ✅ 85% من عرض الشاشة
+                .fillMaxWidth(0.85f),
             shape = RoundedCornerShape(28.dp),
             color = Color.White,
             tonalElevation = 6.dp
