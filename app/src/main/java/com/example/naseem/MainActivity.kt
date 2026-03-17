@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.naseem.data.datasource.WeatherRepository
 import com.example.naseem.nav.NavHostContainer
 import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModel
 import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModelFactory
@@ -27,6 +28,8 @@ import com.example.naseem.presentation.fav.viewModels.FavoriteViewModelFactory
 import com.example.naseem.presentation.home.componets.BottomNavigationBar
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
 import com.example.naseem.presentation.home.viewModels.HomeViewModelFactory
+import com.example.naseem.presentation.settings.viewModel.SettingsViewModel
+import com.example.naseem.presentation.settings.viewModel.SettingsViewModelFactory
 import com.example.naseem.ui.theme.NaseemTheme
 import com.example.naseem.utils.Routes
 import com.example.naseem.utils.getThemeConfig
@@ -68,7 +71,12 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
 
             val viewModel: HomeViewModel = viewModel(factory = HomeViewModelFactory(context))
-            val favoriteViewModel: FavoriteViewModel = viewModel(factory = FavoriteViewModelFactory(context))
+            val favoriteViewModel: FavoriteViewModel = viewModel(
+                factory = FavoriteViewModelFactory(WeatherRepository(context))
+            )
+            val settingsViewModel: SettingsViewModel = viewModel(
+                factory = SettingsViewModelFactory(context)
+            )
             val alertViewModel: WeatherAlertViewModel = viewModel(factory = WeatherAlertViewModelFactory(context))
 
             val weatherData by viewModel.weatherData.collectAsState()
@@ -86,7 +94,8 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         if (currentRoute != Routes.NEXT7DAYS &&
                             currentRoute != Routes.ADDFAVORITEPLACE &&
-                            currentRoute != Routes.ADDWEATHERALERT
+                            currentRoute != Routes.ADDWEATHERALERT&&
+                            currentRoute!= Routes.FAVDETAILSHOME
                         ) {
                             BottomNavigationBar(
                                 navController = navController,
@@ -100,6 +109,7 @@ class MainActivity : ComponentActivity() {
                         padding = padding,
                         color = dynamicColor.color,
                         viewModel = viewModel,
+                        settingsViewModel = settingsViewModel,
                         favoriteViewModel = favoriteViewModel,
                         alertViewModel = alertViewModel,
                         image = dynamicColor.imageRes,

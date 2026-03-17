@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.room.runtime.android)
     implementation(libs.play.services.location)
+    implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -84,4 +85,16 @@ dependencies {
     implementation("androidx.room:room-ktx:$room_version")
     implementation("org.osmdroid:osmdroid-android:6.1.18")
     implementation("androidx.work:work-runtime-ktx:2.9.0")
+    testImplementation ("io.mockk:mockk:1.13.10")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    androidTestImplementation ("androidx.room:room-testing:2.6.1")
+    // Unit Tests
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("io.mockk:mockk:1.13.10")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
+
+    // Instrumented Tests
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.room:room-testing:$room_version")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
 }

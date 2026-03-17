@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,7 +31,8 @@ import com.example.naseem.ui.theme.White100
 fun FavoriteScreen(
     color: Color,
     viewModel: FavoriteViewModel,
-    onFloatingActionButtonClicked: () -> Unit
+    onFloatingActionButtonClicked: () -> Unit,
+    onFavDetailsClick: (Double, Double) -> Unit
 ) {
     val state by viewModel.favoritesState.collectAsState()
     Scaffold(
@@ -110,6 +112,9 @@ fun FavoriteScreen(
                                     color = color,
                                     onDeleteClick = {
                                         viewModel.deleteFromFavorites(place)
+                                    },
+                                    onClick= {
+                                        onFavDetailsClick(place.latitude, place.longitude)
                                     }
                                 )
                             }

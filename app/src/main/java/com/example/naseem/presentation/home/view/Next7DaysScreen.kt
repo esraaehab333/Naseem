@@ -4,7 +4,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.R
 import com.example.naseem.presentation.home.componets.DailyForecastRow
-import com.example.naseem.presentation.home.componets.ForecastDay
+import com.example.naseem.utils.ForecastDay
 import com.example.naseem.presentation.home.componets.TemperatureTrendSection
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily

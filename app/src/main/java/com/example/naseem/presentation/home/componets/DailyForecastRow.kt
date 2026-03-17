@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
+import com.example.naseem.utils.ForecastDay
 
 @Composable
 fun DailyForecastRow(data: ForecastDay, color: Color, icon:Int) {

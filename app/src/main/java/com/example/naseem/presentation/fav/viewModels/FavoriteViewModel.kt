@@ -1,6 +1,5 @@
 package com.example.naseem.presentation.fav.viewModels
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -9,13 +8,15 @@ import com.example.naseem.data.datasource.WeatherRepository
 import com.example.naseem.data.dto.ForecastResponse
 import com.example.naseem.data.dto.WeatherResponse
 import com.example.naseem.data.model.FavoriteModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+
 class FavoriteViewModel(
-    context: Context
+    private val repository: WeatherRepository,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
-    private val repository = WeatherRepository(context.applicationContext)
 
     private val _favoritesState = MutableStateFlow<ApiState<List<FavoriteModel>>>(ApiState.Loading)
     val favoritesState: StateFlow<ApiState<List<FavoriteModel>>> = _favoritesState.asStateFlow()
@@ -32,37 +33,30 @@ class FavoriteViewModel(
     private val _selectedForecast = MutableStateFlow<ForecastResponse?>(null)
     val selectedForecast: StateFlow<ForecastResponse?> = _selectedForecast.asStateFlow()
 
+    init {
+        getAllFavorites()
+    }
+
     fun getWeatherForFavoriteLocation(lat: Double, lon: Double) {
         viewModelScope.launch {
             val weatherResult = repository.getCurrentWeather(lat, lon)
             val forecastResult = repository.getFiveDayForecast(lat, lon)
-
             if (weatherResult is ApiState.Success) _selectedWeather.value = weatherResult.data
             if (forecastResult is ApiState.Success) _selectedForecast.value = forecastResult.data
         }
     }
 
-    init {
-        getAllFavorites()
-    }
-
     private fun getAllFavorites() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             repository.getAllFavWeather()
-                .catch { e ->
-                    _favoritesState.value = ApiState.Failure(e)
-                }
-                .map { list ->
-                    list.map { FavoriteModel(it) }
-                }
-                .collect { models ->
-                    _favoritesState.value = ApiState.Success(models)
-                }
+                .catch { e -> _favoritesState.value = ApiState.Failure(e) }
+                .map { list -> list.map { FavoriteModel(it) } }
+                .collect { models -> _favoritesState.value = ApiState.Success(models) }
         }
     }
 
     fun addToFavorites(favorite: FavoriteModel) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 repository.insertWeatherToFav(favorite.toEntity())
                 _addEvent.emit("${favorite.cityName} added to favorites")
@@ -73,7 +67,7 @@ class FavoriteViewModel(
     }
 
     fun deleteFromFavorites(favorite: FavoriteModel) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 repository.deleteWeatherFromFav(favorite.toEntity())
                 _deleteEvent.emit("${favorite.cityName} deleted from favorites")
@@ -83,11 +77,12 @@ class FavoriteViewModel(
         }
     }
 }
+
 class FavoriteViewModelFactory(
-    private val context: Context
+    private val repository: WeatherRepository
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return FavoriteViewModel(context.applicationContext) as T
+        return FavoriteViewModel(repository) as T
     }
 }

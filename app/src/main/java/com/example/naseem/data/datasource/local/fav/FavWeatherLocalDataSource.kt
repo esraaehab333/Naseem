@@ -1,13 +1,11 @@
 package com.example.naseem.data.datasource.local.fav
 
-import android.content.Context
-import com.example.naseem.data.db.FavoriteDatabase
 import com.example.naseem.data.entity.FavoriteEntity
 import kotlinx.coroutines.flow.Flow
 
-class FavWeatherLocalDataSource(context: Context) {
-    private val favWeatherDao: FavWeatherDao = FavoriteDatabase.getInstance(context =context).favWeatherDao()
-
+class FavWeatherLocalDataSource(
+    private val favWeatherDao: FavWeatherDao
+) {
     suspend fun insertFavWeather(favorite: FavoriteEntity) {
         favWeatherDao.insertFavWeather(favorite)
     }

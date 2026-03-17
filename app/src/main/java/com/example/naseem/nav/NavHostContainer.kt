@@ -18,6 +18,7 @@ import com.example.naseem.presentation.fav.view.AddFavoritePlaceScreen
 import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel
 import com.example.naseem.presentation.home.view.HomeScreen
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
+import com.example.naseem.presentation.settings.viewModel.SettingsViewModel
 import com.example.naseem.utils.Routes
 
 @Composable
@@ -26,6 +27,7 @@ fun NavHostContainer(
     padding: PaddingValues,
     color: Color,
     image: Int,
+    settingsViewModel:SettingsViewModel,
     viewModel: HomeViewModel,
     favoriteViewModel: FavoriteViewModel,
     alertViewModel: WeatherAlertViewModel,
@@ -36,11 +38,28 @@ fun NavHostContainer(
         startDestination = Routes.HOME,
         modifier = Modifier.padding(paddingValues = padding),
         builder = {
+            composable(Routes.FAVDETAILSHOME) { backStackEntry ->
+                val lat = backStackEntry.arguments?.getString("lat")?.toDoubleOrNull()
+                val lon = backStackEntry.arguments?.getString("lon")?.toDoubleOrNull()
+
+                HomeScreen(
+                    settingsViewModel = settingsViewModel,
+                    color = color,
+                    viewModel = viewModel,
+                    image = image,
+                    onNext7DaysClick = {
+                        navController.navigate(Routes.NEXT7DAYS)
+                    },
+                    lat = lat,
+                    lon = lon
+                )
+            }
             composable(Routes.HOME) {
                 HomeScreen(
                     color = color,
                     viewModel = viewModel,
                     image = image,
+                    settingsViewModel = settingsViewModel,
                     onNext7DaysClick = {
                         navController.navigate(Routes.NEXT7DAYS)
                     }
@@ -59,13 +78,18 @@ fun NavHostContainer(
                 FavoriteScreen(
                     color = color,
                     viewModel = favoriteViewModel,
+                    onFavDetailsClick = { lat, lon ->
+                        navController.navigate("favDetailsHome/$lat/$lon")
+                    },
                     onFloatingActionButtonClicked = {
                         navController.navigate(Routes.ADDFAVORITEPLACE)
                     }
                 )
             }
             composable(Routes.SETTINGS) {
+
                 SettingsScreen(
+                    settingsViewModel = settingsViewModel,
                     color = color,
                     onLanguageChange = onLanguageChange
                 )

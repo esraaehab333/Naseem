@@ -1,6 +1,5 @@
 package com.example.naseem.presentation.home.view
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
@@ -10,52 +9,73 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.naseem.BuildConfig
 import com.example.naseem.R
 import com.example.naseem.presentation.home.componets.TodayForecastWeather
 import com.example.naseem.presentation.home.componets.WeatherDetailsCard
 import com.example.naseem.presentation.home.componets.WeatherHeaderSection
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
+import com.example.naseem.presentation.settings.viewModel.SettingsViewModel
 import com.example.naseem.ui.theme.White100
+import com.example.naseem.utils.convertTemp
+import com.example.naseem.utils.convertWind
 import com.example.naseem.utils.formatUnixTimestamp
 
 @Composable
 fun HomeScreen(
     color: Color,
-    image:Int,
+    image: Int,
     viewModel: HomeViewModel,
-    onNext7DaysClick: () -> Unit
+    onNext7DaysClick: () -> Unit,
+    lon: Double? = null,
+    lat: Double? = null,
+    settingsViewModel: SettingsViewModel,
 ) {
     val weatherData by viewModel.weatherData.collectAsState()
     val forecastData by viewModel.forecastData.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    Log.d("TAG", BuildConfig.WEATHER_API_KEY)
-    LaunchedEffect(Unit) {
-        val lat = 30.0444
-        val lon = 31.2357
-        viewModel.getCurrentWeather(lat, lon)
-        viewModel.getFiveDayForecast(lat, lon)
+
+    val tempUnit by settingsViewModel.temperatureUnit.collectAsState()
+    val windUnit by settingsViewModel.windSpeedUnit.collectAsState()
+
+    LaunchedEffect(lat, lon) {
+        if (lat != null && lon != null) {
+            viewModel.getCurrentWeather(lat, lon)
+            viewModel.getFiveDayForecast(lat, lon)
+        } else {
+            viewModel.getLocationAndFetchWeather()
+        }
     }
+
     if (isLoading) {
-        Box(modifier = Modifier.fillMaxSize().background(White100), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(White100),
+            contentAlignment = Alignment.Center
+        ) {
             CircularProgressIndicator(color = color)
         }
     } else {
-        Column(modifier = Modifier.fillMaxSize().background(color = White100)) {
-            Box(
-                modifier = Modifier.background(White100)
-            ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = White100)
+        ) {
+            Box(modifier = Modifier.background(White100)) {
                 WeatherHeaderSection(
                     address = weatherData?.name ?: stringResource(R.string.unknown_location),
-                    date = weatherData?.dt?.let { formatUnixTimestamp(it) } ?: stringResource(R.string.unknown_date),
+                    date = weatherData?.dt?.let { formatUnixTimestamp(it) }
+                        ?: stringResource(R.string.unknown_date),
                     image = image,
-                    tempDegree = weatherData?.main?.temp?.toInt()?.toString() ?: "0"
+                    tempDegree = weatherData?.main?.temp?.let { convertTemp(it, tempUnit) } ?: "0°C"
                 )
                 WeatherDetailsCard(
-                    modifier = Modifier.align(Alignment.BottomCenter).offset(y = 50.dp),
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .offset(y = 50.dp),
                     color = color,
                     humidity = "${weatherData?.main?.humidity}%",
-                    windSpeed = "${weatherData?.wind?.speed} ${stringResource(R.string.km_per_hour)}",
+                    windSpeed = weatherData?.wind?.speed?.let { convertWind(it, windUnit) } ?: "0 m/s",
                     pressure = "${weatherData?.main?.pressure} ${stringResource(R.string.hpa)}",
                     clouds = "${weatherData?.clouds?.all}%"
                 )

@@ -1,4 +1,4 @@
-package com.example.naseem.presentation.alert.components
+package com.example.naseem.worker
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -11,8 +11,6 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.example.naseem.AlarmDismissReceiver
-import com.example.naseem.AlarmSnoozeReceiver
 import com.example.naseem.R
 
 enum class AlertType {
@@ -48,7 +46,7 @@ class WeatherAlertWorker(
             .apply()
 
         when (alertType) {
-            AlertType.ALARM        -> showAlarmNotification(message, alertId)
+            AlertType.ALARM -> showAlarmNotification(message, alertId)
             AlertType.NOTIFICATION -> showSimpleNotification(message, alertId)
         }
 

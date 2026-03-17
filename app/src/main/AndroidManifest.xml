@@ -20,11 +20,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Naseem">
         <receiver
-            android:name=".AlarmSnoozeReceiver"
+            android:name=".worker.AlarmSnoozeReceiver"
             android:enabled="true"
             android:exported="true"></receiver>
         <receiver
-            android:name=".AlarmDismissReceiver"
+            android:name=".worker.AlarmDismissReceiver"
             android:enabled="true"
             android:exported="true" />
 

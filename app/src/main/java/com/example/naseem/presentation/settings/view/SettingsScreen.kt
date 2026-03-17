@@ -55,10 +55,11 @@ import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
 import com.example.naseem.presentation.settings.components.TemperatureAndWindSpeedSection
 import com.example.naseem.presentation.settings.components.UnitSection
+import com.example.naseem.presentation.settings.viewModel.SettingsViewModel
 import com.example.naseem.ui.theme.Gray100
 
 @Composable
-fun SettingsScreen(color:Color , onLanguageChange: (String) -> Unit) {
+fun SettingsScreen(color:Color, onLanguageChange: (String) -> Unit, settingsViewModel: SettingsViewModel,) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +77,7 @@ fun SettingsScreen(color:Color , onLanguageChange: (String) -> Unit) {
         Spacer(modifier = Modifier.height(25.dp))
         LocationSection(color= color)
         Spacer(modifier = Modifier.height(32.dp))
-        TemperatureAndWindSpeedSection(color = color)
+        TemperatureAndWindSpeedSection(color = color, settingsViewModel = settingsViewModel)
         Spacer(modifier = Modifier.height(32.dp))
         LanguageSection(color = color , onLanguageChange=onLanguageChange)
     }
