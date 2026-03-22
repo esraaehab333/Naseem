@@ -19,8 +19,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.naseem.data.datasource.WeatherRepository
-import com.example.naseem.nav.NavHostContainer
+import com.example.naseem.data.repository.WeatherRepository
+import com.example.naseem.presentation.nav.NavHostContainer
 import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModel
 import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModelFactory
 import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel

@@ -44,7 +44,6 @@
     <string name="saved_places_subtitle">Quick access to your top destinations</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="add_place">Add Place</string>
-    <string name="delete">Delete</string>
     <string name="unknown">Unknown</string>
     <string name="temperature_placeholder">Temperature: 24°C</string>
     <string name="search_location_hint">Search location...</string>
@@ -55,5 +54,14 @@
     <string name="fav_empty_title">No Favorite Places Yet</string>
     <string name="fav_empty_subtitle">Add your favorite locations to get quick access to their weather</string>
     <string name="alerts_empty_title">No Weather Alerts</string>
+    <string name="delete">Delete</string>
+    <string name="triggered">Triggered</string>
+    <string name="delete_alert">Delete Alert</string>
+    <string name="alarm">Alarm</string>
+    <string name="notification">Notification</string>
+    <string name="heavy_rain">Heavy Rain</string>
+    <string name="strong_wind">Strong Wind</string>
+    <string name="snowfall">Snowfall</string>
+    <string name="thunderstorm">Thunderstorm</string>
     <string name="alerts_empty_subtitle">You\'re all clear! No active weather alerts at the moment</string>
 </resources>

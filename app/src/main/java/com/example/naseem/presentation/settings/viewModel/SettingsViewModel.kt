@@ -3,7 +3,7 @@ package com.example.naseem.presentation.settings.viewModel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.naseem.data.datasource.SettingsRepository
+import com.example.naseem.data.repository.SettingsRepository
 import kotlinx.coroutines.flow.StateFlow
 
 class SettingsViewModel(private val repo: SettingsRepository) : ViewModel() {

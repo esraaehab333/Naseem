@@ -1,8 +1,8 @@
 package com.example.naseem.data.datasource.local.alert
 
 import android.content.Context
-import com.example.naseem.data.db.AlertDataBase
-import com.example.naseem.data.entity.AlertEntity
+import com.example.naseem.data.database.AlertDataBase
+import com.example.naseem.data.models.entity.AlertEntity
 import kotlinx.coroutines.flow.Flow
 
 class AlertWeatherLocalDataSource(context: Context) {

@@ -1,4 +1,4 @@
-package com.example.naseem.data.entity
+package com.example.naseem.data.models.entity
 
 import androidx.room.Entity
 
