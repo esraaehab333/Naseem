@@ -4,21 +4,23 @@ import android.content.Context.MODE_PRIVATE
 import android.location.Address
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import com.example.naseem.data.models.responses.FavoriteModel
 import com.example.naseem.presentation.fav.components.BottomSheetSection
 import com.example.naseem.presentation.fav.components.LocationFloatingActionButton
 import com.example.naseem.presentation.fav.components.MapSection
+import com.example.naseem.presentation.fav.components.NoNetworkDialog
 import com.example.naseem.presentation.fav.components.SearchSection
 import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel
 import com.example.naseem.utils.LocationUtils
+import com.example.naseem.utils.NetworkUtils
 import com.google.android.gms.location.LocationServices
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
@@ -40,27 +42,47 @@ fun AddFavoritePlaceScreen(
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     val isSheetVisible = selectedLocation != null && !imeVisible
+    var showNoNetworkDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
-        Configuration.getInstance().apply {
-            userAgentValue = context.packageName
-            load(context, context.getSharedPreferences("osmdroid",MODE_PRIVATE))
-        }
-        LocationUtils.getCurrentLocation(context, fusedLocationClient) { point ->
-            currentLocation = point
-            mapCenter = point
+        if (!NetworkUtils.isNetworkAvailable(context)) {
+            showNoNetworkDialog = true
+        } else {
+            Configuration.getInstance().apply {
+                userAgentValue = context.packageName
+                load(context, context.getSharedPreferences("osmdroid", MODE_PRIVATE))
+            }
+            LocationUtils.getCurrentLocation(context, fusedLocationClient) { point ->
+                currentLocation = point
+                mapCenter = point
+            }
         }
     }
+
     LaunchedEffect(selectedLocation) {
         selectedLocation?.let { location ->
-            LocationUtils.getAddressFromLocation(context, location) { address ->
-                selectedAddress = address
+            if (NetworkUtils.isNetworkAvailable(context)) {
+                LocationUtils.getAddressFromLocation(context, location) { address ->
+                    selectedAddress = address
+                }
+                viewModel.getWeatherForFavoriteLocation(
+                    lat = location.latitude,
+                    lon = location.longitude,
+                )
+            } else {
+                showNoNetworkDialog = true
             }
-            viewModel.getWeatherForFavoriteLocation(
-                lat = location.latitude,
-                lon = location.longitude,
-            )
         }
     }
+
+    if (showNoNetworkDialog) {
+        NoNetworkDialog(
+            color = color,
+            onDismiss = { showNoNetworkDialog = false
+                onNavigateBack()}
+        )
+    }
+
     Scaffold(containerColor = Color.Transparent) { innerPadding ->
         Box(
             modifier = Modifier
@@ -118,7 +140,7 @@ fun AddFavoritePlaceScreen(
                     horizontalArrangement = Arrangement.End
                 ) {
                     LocationFloatingActionButton(
-                        color=color,
+                        color = color,
                         onClick = {
                             LocationUtils.getCurrentLocation(context, fusedLocationClient) { point ->
                                 currentLocation = point
@@ -128,9 +150,7 @@ fun AddFavoritePlaceScreen(
                         }
                     )
                 }
-                AnimatedVisibility(
-                    visible = isSheetVisible
-                ) {
+                AnimatedVisibility(visible = isSheetVisible) {
                     BottomSheetSection(
                         color = color,
                         selectedAddress = selectedAddress,

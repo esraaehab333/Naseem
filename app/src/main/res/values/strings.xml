@@ -63,5 +63,9 @@
     <string name="strong_wind">Strong Wind</string>
     <string name="snowfall">Snowfall</string>
     <string name="thunderstorm">Thunderstorm</string>
+    <string name="no_internet_title">No Internet Connection</string>
+    <string name="no_internet_add_fav_message">You need an internet connection to add a favorite location.</string>
+    <string name="ok">OK</string>
+    <string name="no_internet_home_message">Please check your connection and try again.</string>
     <string name="alerts_empty_subtitle">You\'re all clear! No active weather alerts at the moment</string>
 </resources>

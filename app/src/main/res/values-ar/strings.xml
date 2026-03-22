@@ -64,5 +64,9 @@
     <string name="strong_wind">رياح قوية</string>
     <string name="snowfall">تساقط الثلوج</string>
     <string name="thunderstorm">عاصفة رعدية</string>
+    <string name="no_internet_title">No Internet Connection</string>
+    <string name="no_internet_add_fav_message">You need an internet connection to add a favorite location.</string>
+    <string name="ok">OK</string>
+    <string name="no_internet_home_message">Please check your connection and try again.</string>
     <string name="alerts_empty_subtitle">كل شيء على ما يرام! لا توجد تنبيهات طقس نشطة الآن</string>
 </resources>

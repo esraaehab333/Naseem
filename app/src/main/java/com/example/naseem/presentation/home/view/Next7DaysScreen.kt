@@ -5,32 +5,48 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.R
+import com.example.naseem.presentation.fav.components.NoNetworkDialog
 import com.example.naseem.presentation.home.componets.DailyForecastRow
-import com.example.naseem.utils.ForecastDay
 import com.example.naseem.presentation.home.componets.TemperatureTrendSection
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
+import com.example.naseem.utils.ForecastDay
+import com.example.naseem.utils.NetworkUtils
 import com.example.naseem.utils.formatUnixToDay
 import com.example.naseem.utils.getWeatherIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Next7DaysScreen(color: Color, viewModel: HomeViewModel, onBackButtonClick: () -> Unit) {
+    val context = LocalContext.current
     val forecastData by viewModel.forecastData.collectAsState()
+    val isOnline = NetworkUtils.isNetworkAvailable(context)
+    var showNoNetworkDialog by remember { mutableStateOf(!isOnline) }
+
+    if (showNoNetworkDialog) {
+        NoNetworkDialog(
+            color = color,
+            onDismiss = {
+                showNoNetworkDialog = false
+                onBackButtonClick()
+            }
+        )
+    }
+
     val dailyList = forecastData?.list?.filter {
         it.dtTxt?.contains("12:00:00") == true
     } ?: emptyList()
+
     val highTemps = dailyList.map { it.main?.tempMax?.toInt() ?: 0 }
     val lowTemps = dailyList.map { it.main?.tempMin?.toInt() ?: 0 }
 
@@ -42,10 +58,15 @@ fun Next7DaysScreen(color: Color, viewModel: HomeViewModel, onBackButtonClick: (
                         stringResource(R.string.five_day_forecast),
                         fontWeight = FontWeight.Bold,
                         fontFamily = PlusJakartaSansFontFamily,
-                        fontSize = 18.sp)},
+                        fontSize = 18.sp
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackButtonClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
@@ -62,7 +83,7 @@ fun Next7DaysScreen(color: Color, viewModel: HomeViewModel, onBackButtonClick: (
                 if (highTemps.isNotEmpty()) {
                     TemperatureTrendSection(
                         highTemps = highTemps,
-                        lowTemps= lowTemps,
+                        lowTemps = lowTemps,
                         color = color
                     )
                 }
