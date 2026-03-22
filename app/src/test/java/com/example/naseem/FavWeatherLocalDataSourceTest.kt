@@ -2,7 +2,7 @@ package com.example.naseem
 
 import com.example.naseem.data.datasource.local.fav.FavWeatherDao
 import com.example.naseem.data.datasource.local.fav.FavWeatherLocalDataSource
-import com.example.naseem.data.entity.FavoriteEntity
+import com.example.naseem.data.models.entity.FavoriteEntity
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk

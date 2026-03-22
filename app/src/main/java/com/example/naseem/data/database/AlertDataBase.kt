@@ -1,11 +1,11 @@
-package com.example.naseem.data.db
+package com.example.naseem.data.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.naseem.data.datasource.local.alert.AlertWeatherDao
-import com.example.naseem.data.entity.AlertEntity
+import com.example.naseem.data.models.entity.AlertEntity
 
 @Database(entities = [AlertEntity::class], version = 1)
 abstract class AlertDataBase :RoomDatabase() {

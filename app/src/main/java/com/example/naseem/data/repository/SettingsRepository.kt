@@ -1,4 +1,4 @@
-package com.example.naseem.data.datasource
+package com.example.naseem.data.repository
 
 import android.content.Context
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,7 +8,6 @@ class SettingsRepository private constructor(context: Context) {
 
     private val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
-    // Temperature
     private val _temperatureUnit = MutableStateFlow(
         prefs.getString("temperature_unit", "celsius") ?: "celsius"
     )
@@ -19,7 +18,6 @@ class SettingsRepository private constructor(context: Context) {
         _temperatureUnit.value = unit
     }
 
-    // Wind Speed
     private val _windSpeedUnit = MutableStateFlow(
         prefs.getString("wind_speed_unit", "meter_per_sec") ?: "meter_per_sec"
     )

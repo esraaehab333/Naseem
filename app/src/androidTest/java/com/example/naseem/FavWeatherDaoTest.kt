@@ -4,8 +4,8 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.naseem.data.datasource.local.fav.FavWeatherDao
-import com.example.naseem.data.db.FavoriteDatabase
-import com.example.naseem.data.entity.FavoriteEntity
+import com.example.naseem.data.database.FavoriteDatabase
+import com.example.naseem.data.models.entity.FavoriteEntity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.hasItem

@@ -1,4 +1,4 @@
-package com.example.naseem.data.dto
+package com.example.naseem.data.models.dto
 
 import com.google.gson.annotations.SerializedName
 

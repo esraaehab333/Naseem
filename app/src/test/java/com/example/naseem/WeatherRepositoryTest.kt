@@ -1,12 +1,12 @@
 package com.example.naseem
 
 import com.example.naseem.common.ApiState
-import com.example.naseem.data.datasource.WeatherRepository
+import com.example.naseem.data.repository.WeatherRepository
 import com.example.naseem.data.datasource.local.alert.AlertWeatherLocalDataSource
 import com.example.naseem.data.datasource.local.fav.FavWeatherLocalDataSource
 import com.example.naseem.data.datasource.remote.WeatherRemoteDataSource
-import com.example.naseem.data.dto.WeatherResponse
-import com.example.naseem.data.entity.FavoriteEntity
+import com.example.naseem.data.models.dto.WeatherResponse
+import com.example.naseem.data.models.entity.FavoriteEntity
 import io.mockk.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf

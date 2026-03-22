@@ -1,4 +1,4 @@
-package com.example.naseem.nav
+package com.example.naseem.presentation.nav
 
 import FavoriteScreen
 import Next7DaysScreen

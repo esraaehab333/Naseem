@@ -1,6 +1,6 @@
 package com.example.naseem.data.datasource.local.fav
 
-import com.example.naseem.data.entity.FavoriteEntity
+import com.example.naseem.data.models.entity.FavoriteEntity
 import kotlinx.coroutines.flow.Flow
 
 class FavWeatherLocalDataSource(

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.naseem.common.ApiState
-import com.example.naseem.data.datasource.WeatherRepository
-import com.example.naseem.data.model.WeatherAlertModel
+import com.example.naseem.data.repository.WeatherRepository
+import com.example.naseem.data.models.responses.WeatherAlertModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

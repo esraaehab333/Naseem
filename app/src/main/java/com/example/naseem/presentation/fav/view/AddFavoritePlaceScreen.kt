@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.naseem.data.model.FavoriteModel
+import com.example.naseem.data.models.responses.FavoriteModel
 import com.example.naseem.presentation.fav.components.BottomSheetSection
 import com.example.naseem.presentation.fav.components.LocationFloatingActionButton
 import com.example.naseem.presentation.fav.components.MapSection

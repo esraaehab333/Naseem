@@ -1,6 +1,6 @@
-package com.example.naseem.data.model
+package com.example.naseem.data.models.responses
 
-import com.example.naseem.data.entity.AlertEntity
+import com.example.naseem.data.models.entity.AlertEntity
 import com.example.naseem.utils.WeatherFilter
 
 data class WeatherAlertModel(

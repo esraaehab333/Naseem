@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.naseem.R
-import com.example.naseem.data.dto.ForecastResponse
+import com.example.naseem.data.models.dto.ForecastResponse
 import com.example.naseem.utils.getWeatherIcon
 
 

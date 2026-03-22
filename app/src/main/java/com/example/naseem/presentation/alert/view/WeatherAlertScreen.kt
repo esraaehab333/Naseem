@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.R
 import com.example.naseem.common.ApiState
-import com.example.naseem.data.model.WeatherAlertModel
 import com.example.naseem.presentation.alert.components.AlertCard
 import com.example.naseem.worker.AlertScheduler
 import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModel
@@ -27,7 +26,6 @@ import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
-import com.example.naseem.utils.WeatherFilter
 
 @Composable
 fun WeatherAlertScreen(

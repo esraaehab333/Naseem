@@ -29,7 +29,7 @@ class WeatherAlertWorker(
 
         const val KEY_MESSAGE    = "message"
         const val KEY_ALERT_ID   = "alert_id"
-        const val KEY_ALERT_TYPE = "alert_type"   // pass AlertType.name as String
+        const val KEY_ALERT_TYPE = "alert_type"
     }
 
     override fun doWork(): Result {
@@ -80,7 +80,7 @@ class WeatherAlertWorker(
 
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID_ALARM)
             .setSmallIcon(R.drawable.ic_alert_type)
-            .setContentTitle("🚨 Naseem Weather Alarm")
+            .setContentTitle("Naseem Weather Alarm")
             .setContentText(message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)

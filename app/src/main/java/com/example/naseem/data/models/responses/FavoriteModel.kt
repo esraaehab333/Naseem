@@ -1,6 +1,6 @@
-package com.example.naseem.data.model
+package com.example.naseem.data.models.responses
 
-import com.example.naseem.data.entity.FavoriteEntity
+import com.example.naseem.data.models.entity.FavoriteEntity
 
 data class FavoriteModel(
     val cityName: String,

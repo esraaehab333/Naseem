@@ -14,21 +14,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
+import androidx.compose.ui.res.stringResource
+import com.example.naseem.R
 
 @Composable
-fun AlertActionButton(color: Color ,onDeleteButton: () -> Unit ){
+fun AlertActionButton(
+    color: Color,
+    onDeleteButton: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Button(
             onClick = onDeleteButton,
-            modifier = Modifier.weight(1f).height(44.dp),
+            modifier = Modifier
+                .weight(1f)
+                .height(44.dp),
             colors = ButtonDefaults.buttonColors(containerColor = color),
             shape = RoundedCornerShape(12.dp)
         ) {
             Text(
-                text = "Delete",
+                text = stringResource(id = R.string.delete),
                 color = White100,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = PlusJakartaSansFontFamily,
