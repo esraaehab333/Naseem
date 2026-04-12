@@ -1,3 +1,5 @@
+package com.example.naseem.presentation.alert.components
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,11 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.R
-import com.example.naseem.presentation.alert.components.TriggerCard
 import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.ColdPrimary
 import com.example.naseem.ui.theme.HotPrimary
@@ -35,6 +37,11 @@ fun WeatherTriggerSection(
 ) {
     var selectedFilter by remember { mutableStateOf<WeatherFilter?>(null) }
 
+    fun onToggle(filter: WeatherFilter, checked: Boolean) {
+        selectedFilter = if (checked) filter else null
+        onFilterSelected(selectedFilter)
+    }
+
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(R.drawable.ic_weather_triggers),
@@ -44,7 +51,7 @@ fun WeatherTriggerSection(
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            "Weather Triggers",
+            text = stringResource(R.string.weather_triggers),
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
             fontFamily = PlusJakartaSansFontFamily,
@@ -56,50 +63,38 @@ fun WeatherTriggerSection(
         TriggerCard(
             icon = R.drawable.ic_rainy,
             iconColor = ColdPrimary,
-            title = "Heavy Rain",
-            subtitle = "Alert when > 5mm/h",
+            title = stringResource(R.string.heavy_rain),
+            subtitle = stringResource(R.string.heavy_rain_subtitle),
             isChecked = selectedFilter == WeatherFilter.RAIN,
             color = color,
-            onCheckedChange = {
-                selectedFilter = if (it) WeatherFilter.RAIN else null
-                onFilterSelected(selectedFilter)
-            }
+            onCheckedChange = { onToggle(WeatherFilter.RAIN, it) }
         )
         TriggerCard(
             icon = R.drawable.ic_wind,
             iconColor = MildPrimary,
-            title = "Strong Wind",
-            subtitle = "Alert when > 40km/h",
+            title = stringResource(R.string.strong_wind),
+            subtitle = stringResource(R.string.strong_wind_subtitle),
             isChecked = selectedFilter == WeatherFilter.WIND,
             color = color,
-            onCheckedChange = {
-                selectedFilter = if (it) WeatherFilter.WIND else null
-                onFilterSelected(selectedFilter)
-            }
+            onCheckedChange = { onToggle(WeatherFilter.WIND, it) }
         )
         TriggerCard(
             icon = R.drawable.ic_snowy,
             iconColor = HotPrimary,
-            title = "Snowfall",
-            subtitle = "Alert for any snow",
+            title = stringResource(R.string.snowfall),
+            subtitle = stringResource(R.string.snowfall_subtitle),
             isChecked = selectedFilter == WeatherFilter.SNOW,
             color = color,
-            onCheckedChange = {
-                selectedFilter = if (it) WeatherFilter.SNOW else null
-                onFilterSelected(selectedFilter)
-            }
+            onCheckedChange = { onToggle(WeatherFilter.SNOW, it) }
         )
         TriggerCard(
             icon = R.drawable.ic_thunderstorm,
             iconColor = HotSecondary,
-            title = "Thunderstorm",
-            subtitle = "Detection in 50km radius",
+            title = stringResource(R.string.thunderstorm),
+            subtitle = stringResource(R.string.thunderstorm_subtitle),
             isChecked = selectedFilter == WeatherFilter.THUNDERSTORM,
             color = color,
-            onCheckedChange = {
-                selectedFilter = if (it) WeatherFilter.THUNDERSTORM else null
-                onFilterSelected(selectedFilter)
-            }
+            onCheckedChange = { onToggle(WeatherFilter.THUNDERSTORM, it) }
         )
     }
 }

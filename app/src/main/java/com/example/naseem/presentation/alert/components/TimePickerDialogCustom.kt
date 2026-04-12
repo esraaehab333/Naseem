@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.naseem.R
 
 @Composable
 fun TimePickerDialogCustom(
@@ -26,13 +28,10 @@ fun TimePickerDialogCustom(
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false
-        )
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Surface(
-            modifier = Modifier
-                .fillMaxWidth(0.85f),
+            modifier = Modifier.fillMaxWidth(0.85f),
             shape = RoundedCornerShape(28.dp),
             color = Color.White,
             tonalElevation = 6.dp
@@ -49,7 +48,7 @@ fun TimePickerDialogCustom(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onDismissRequest) {
-                        Text("Cancel", color = color.copy(alpha = 0.6f))
+                        Text(stringResource(R.string.cancel), color = color.copy(alpha = 0.6f))
                     }
                     confirmButton()
                 }

@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,8 +32,8 @@ import com.example.naseem.data.models.responses.WeatherAlertModel
 import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
-import com.example.naseem.utils.WeatherFilter
-
+import com.example.naseem.utils.extensions.displayName
+import com.example.naseem.utils.extensions.icon
 
 @Composable
 fun AlertCard(
@@ -51,10 +52,7 @@ fun AlertCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (hasTriggered)
-                color.copy(alpha = 0.14f)
-            else
-                color.copy(alpha = 0.06f)
+            containerColor = if (hasTriggered) color.copy(alpha = 0.14f) else color.copy(alpha = 0.06f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -64,8 +62,6 @@ fun AlertCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            // weather icon box
             Box(
                 modifier = Modifier
                     .size(52.dp)
@@ -83,14 +79,12 @@ fun AlertCard(
             Spacer(modifier = Modifier.width(12.dp))
 
             Column(modifier = Modifier.weight(1f)) {
-
-                // title row + triggered chip
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
-                        text = alert.weatherFilter.displayName(),
+                        text = alert.weatherFilter.displayName(context),
                         fontFamily = PlusJakartaSansFontFamily,
                         fontWeight = FontWeight.Bold,
                         color = Black100,
@@ -98,39 +92,10 @@ fun AlertCard(
                     )
 
                     if (hasTriggered) {
-                        Box(
-                            modifier = Modifier
-                                .background(
-                                    color = Color(0xFFFF6B35).copy(alpha = 0.15f),
-                                    shape = RoundedCornerShape(6.dp)
-                                )
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(3.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(6.dp)
-                                        .background(
-                                            Color(0xFFFF6B35),
-                                            RoundedCornerShape(50.dp)
-                                        )
-                                )
-                                Text(
-                                    text = "Triggered",
-                                    fontFamily = PlusJakartaSansFontFamily,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = Color(0xFFFF6B35),
-                                    fontSize = 9.sp
-                                )
-                            }
-                        }
+                        TriggeredBadge()
                     }
                 }
 
-                // date row
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -150,7 +115,6 @@ fun AlertCard(
                     )
                 }
 
-                // time range row
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -171,40 +135,13 @@ fun AlertCard(
                 }
             }
 
-            // badge + delete
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Box(
-                    modifier = Modifier
-                        .background(color.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                if (alert.alertType == "alarm") R.drawable.ic_alarm_sound
-                                else R.drawable.ic_notification
-                            ),
-                            contentDescription = null,
-                            tint = color,
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Text(
-                            text = alert.alertType.replaceFirstChar { it.uppercase() },
-                            fontFamily = PlusJakartaSansFontFamily,
-                            fontWeight = FontWeight.SemiBold,
-                            color = color,
-                            fontSize = 10.sp
-                        )
-                    }
-                }
+                AlertTypeBadge(alertType = alert.alertType, color = color)
 
                 IconButton(onClick = onDeleteClick) {
                     Icon(
                         painter = painterResource(R.drawable.ic_delete),
-                        contentDescription = "Delete Alert",
+                        contentDescription = stringResource(R.string.delete_alert),
                         tint = Color.Red.copy(alpha = 0.7f),
                         modifier = Modifier.size(18.dp)
                     )
@@ -213,16 +150,64 @@ fun AlertCard(
         }
     }
 }
-private fun WeatherFilter.icon(): Int = when (this) {
-    WeatherFilter.RAIN         -> R.drawable.ic_rainy
-    WeatherFilter.WIND         -> R.drawable.ic_wind
-    WeatherFilter.SNOW         -> R.drawable.ic_snowy
-    WeatherFilter.THUNDERSTORM -> R.drawable.ic_thunderstorm
+
+@Composable
+private fun TriggeredBadge() {
+    Box(
+        modifier = Modifier
+            .background(
+                color = Color(0xFFFF6B35).copy(alpha = 0.15f),
+                shape = RoundedCornerShape(6.dp)
+            )
+            .padding(horizontal = 6.dp, vertical = 2.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(3.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(6.dp)
+                    .background(Color(0xFFFF6B35), RoundedCornerShape(50.dp))
+            )
+            Text(
+                text = stringResource(R.string.triggered),
+                fontFamily = PlusJakartaSansFontFamily,
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xFFFF6B35),
+                fontSize = 9.sp
+            )
+        }
+    }
 }
 
-private fun WeatherFilter.displayName(): String = when (this) {
-    WeatherFilter.RAIN         -> "Heavy Rain"
-    WeatherFilter.WIND         -> "Strong Wind"
-    WeatherFilter.SNOW         -> "Snowfall"
-    WeatherFilter.THUNDERSTORM -> "Thunderstorm"
+@Composable
+private fun AlertTypeBadge(alertType: String, color: Color) {
+    Box(
+        modifier = Modifier
+            .background(color.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Icon(
+                painter = painterResource(
+                    if (alertType == "alarm") R.drawable.ic_alarm_sound
+                    else R.drawable.ic_notification
+                ),
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(12.dp)
+            )
+            Text(
+                text = alertType.replaceFirstChar { it.uppercase() },
+                fontFamily = PlusJakartaSansFontFamily,
+                fontWeight = FontWeight.SemiBold,
+                color = color,
+                fontSize = 10.sp
+            )
+        }
+    }
 }

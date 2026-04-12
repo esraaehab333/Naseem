@@ -1,15 +1,33 @@
 package com.example.naseem.presentation.alert.view
 
-import WeatherTriggerSection
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -19,13 +37,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.R
 import com.example.naseem.data.models.responses.WeatherAlertModel
-import com.example.naseem.worker.AlertScheduler
 import com.example.naseem.presentation.alert.components.AlertTypeSection
 import com.example.naseem.presentation.alert.components.ScheduleAndDurationSection
+import com.example.naseem.presentation.alert.components.WeatherTriggerSection
 import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModel
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
 import com.example.naseem.utils.WeatherFilter
+import com.example.naseem.utils.extensions.displayName
+import com.example.naseem.worker.AlertScheduler
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,13 +56,13 @@ fun AddWeatherAlertScreen(
 ) {
     val context = LocalContext.current
 
-    var dateMillis  by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var fromMillis  by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var toMillis    by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var dateLabel   by remember { mutableStateOf("") }
-    var fromLabel   by remember { mutableStateOf("08:00 AM") }
-    var toLabel     by remember { mutableStateOf("06:00 PM") }
-    var alertType   by remember { mutableStateOf("notification") }
+    var dateMillis    by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    var fromMillis    by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    var toMillis      by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    var dateLabel     by remember { mutableStateOf("") }
+    var fromLabel     by remember { mutableStateOf(context.getString(R.string.default_from_time)) }
+    var toLabel       by remember { mutableStateOf(context.getString(R.string.default_to_time)) }
+    var alertType     by remember { mutableStateOf("notification") }
     var selectedFilter by remember { mutableStateOf<WeatherFilter?>(null) }
 
     Scaffold(
@@ -51,7 +71,7 @@ fun AddWeatherAlertScreen(
             TopAppBar(
                 title = {
                     Text(
-                        "Add Weather Alert",
+                        text = stringResource(R.string.add_weather_alert),
                         fontWeight = FontWeight.Bold,
                         fontFamily = PlusJakartaSansFontFamily,
                         fontSize = 18.sp
@@ -60,7 +80,7 @@ fun AddWeatherAlertScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackButtonClick) {
                         Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back)
                         )
                     }
@@ -104,7 +124,6 @@ fun AddWeatherAlertScreen(
             Button(
                 onClick = {
                     selectedFilter?.let { filter ->
-
                         val alert = WeatherAlertModel(
                             fromTimeMillis = fromMillis,
                             toTimeMillis   = toMillis,
@@ -115,7 +134,6 @@ fun AddWeatherAlertScreen(
                             weatherFilter  = filter,
                             latitude       = 0.0,
                             longitude      = 0.0
-                            // createdAt defaults to System.currentTimeMillis()
                         )
 
                         viewModel.addAlert(alert)
@@ -123,7 +141,7 @@ fun AddWeatherAlertScreen(
                         AlertScheduler.scheduleAlert(
                             context     = context,
                             triggerTime = fromMillis,
-                            message     = filter.displayName(),
+                            message     = filter.displayName(context),
                             alertId     = alert.createdAt
                         )
 
@@ -141,8 +159,10 @@ fun AddWeatherAlertScreen(
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
-                    text = if (selectedFilter == null) "Select a weather trigger"
-                    else "Save Alert",
+                    text = if (selectedFilter == null)
+                        stringResource(R.string.select_weather_trigger)
+                    else
+                        stringResource(R.string.save_alert),
                     color = White100,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = PlusJakartaSansFontFamily,
@@ -153,12 +173,4 @@ fun AddWeatherAlertScreen(
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
-}
-
-// needed here too since AddWeatherAlertScreen calls it
-private fun WeatherFilter.displayName(): String = when (this) {
-    WeatherFilter.RAIN         -> "Heavy Rain"
-    WeatherFilter.WIND         -> "Strong Wind"
-    WeatherFilter.SNOW         -> "Snowfall"
-    WeatherFilter.THUNDERSTORM -> "Thunderstorm"
 }

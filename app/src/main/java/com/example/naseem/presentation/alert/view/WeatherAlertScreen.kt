@@ -1,12 +1,26 @@
 package com.example.naseem.presentation.alert.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,13 +33,13 @@ import androidx.compose.ui.unit.sp
 import com.example.naseem.R
 import com.example.naseem.common.ApiState
 import com.example.naseem.presentation.alert.components.AlertCard
-import com.example.naseem.worker.AlertScheduler
 import com.example.naseem.presentation.alert.viewModel.WeatherAlertViewModel
 import com.example.naseem.presentation.fav.components.EmptyStateScreen
 import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
+import com.example.naseem.worker.AlertScheduler
 
 @Composable
 fun WeatherAlertScreen(
@@ -64,7 +78,7 @@ fun WeatherAlertScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Weather Alerts",
+                text = stringResource(R.string.weather_alerts),
                 fontFamily = PlusJakartaSansFontFamily,
                 fontWeight = FontWeight.Bold,
                 color = Black100,
@@ -73,7 +87,7 @@ fun WeatherAlertScreen(
             )
 
             Text(
-                text = "Get notified when severe weather hits",
+                text = stringResource(R.string.weather_alerts_subtitle),
                 fontSize = 12.sp,
                 color = Gray100,
                 fontFamily = PlusJakartaSansFontFamily,
@@ -99,8 +113,8 @@ fun WeatherAlertScreen(
                         ) {
                             EmptyStateScreen(
                                 icon = R.drawable.ic_alert_type,
-                                title = "No Alerts Yet",
-                                subtitle = "Tap + to add your first weather alert",
+                                title = stringResource(R.string.no_alerts_yet),
+                                subtitle = stringResource(R.string.no_alerts_subtitle),
                                 color = color
                             )
                         }
@@ -133,7 +147,7 @@ fun WeatherAlertScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            stringResource(R.string.something_went_wrong),
+                            text = stringResource(R.string.something_went_wrong),
                             color = Color.Red,
                             fontFamily = PlusJakartaSansFontFamily
                         )
@@ -143,4 +157,3 @@ fun WeatherAlertScreen(
         }
     }
 }
-

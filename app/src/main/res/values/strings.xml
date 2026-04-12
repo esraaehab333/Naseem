@@ -65,7 +65,27 @@
     <string name="thunderstorm">Thunderstorm</string>
     <string name="no_internet_title">No Internet Connection</string>
     <string name="no_internet_add_fav_message">You need an internet connection to add a favorite location.</string>
+    <string name="weather_alerts">Weather Alerts</string>
+    <string name="weather_alerts_subtitle">Get notified when severe weather hits</string>
+    <string name="no_alerts_yet">No Alerts Yet</string>
+    <string name="no_alerts_subtitle">Tap + to add your first weather alert</string>
+    <string name="add_weather_alert">Add Weather Alert</string>
+    <string name="save_alert">Save Alert</string>
+    <string name="select_weather_trigger">Select a weather trigger</string>
+    <string name="schedule_and_duration">Schedule and Duration</string>
+    <string name="label_date">DATE</string>
+    <string name="label_from">FROM</string>
+    <string name="label_to">TO</string>
     <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="default_from_time">08:00 AM</string>
+    <string name="default_to_time">06:00 PM</string>
+    <string name="alert_type">Alert Type</string>
+    <string name="weather_triggers">Weather Triggers</string>
+    <string name="heavy_rain_subtitle">Alert when &gt; 5mm/h</string>
+    <string name="strong_wind_subtitle">Alert when &gt; 40km/h</string>
+    <string name="snowfall_subtitle">Alert for any snow</string>
+    <string name="thunderstorm_subtitle">Detection in 50km radius</string>
     <string name="no_internet_home_message">Please check your connection and try again.</string>
     <string name="alerts_empty_subtitle">You\'re all clear! No active weather alerts at the moment</string>
 </resources>
