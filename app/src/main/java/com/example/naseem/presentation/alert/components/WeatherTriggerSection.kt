@@ -41,7 +41,6 @@ fun WeatherTriggerSection(
         selectedFilter = if (checked) filter else null
         onFilterSelected(selectedFilter)
     }
-
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             painter = painterResource(R.drawable.ic_weather_triggers),

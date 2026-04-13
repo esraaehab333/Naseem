@@ -76,7 +76,6 @@ fun WeatherAlertScreen(
                 .padding(horizontal = 24.dp)
         ) {
             Spacer(modifier = Modifier.height(32.dp))
-
             Text(
                 text = stringResource(R.string.weather_alerts),
                 fontFamily = PlusJakartaSansFontFamily,
@@ -85,7 +84,6 @@ fun WeatherAlertScreen(
                 fontSize = 18.sp,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-
             Text(
                 text = stringResource(R.string.weather_alerts_subtitle),
                 fontSize = 12.sp,
@@ -93,7 +91,6 @@ fun WeatherAlertScreen(
                 fontFamily = PlusJakartaSansFontFamily,
                 modifier = Modifier.padding(bottom = 24.dp)
             )
-
             when (state) {
                 is ApiState.Loading -> {
                     Box(
@@ -134,7 +131,8 @@ fun WeatherAlertScreen(
                                     onDeleteClick = {
                                         AlertScheduler.cancelAlert(context, alert.createdAt)
                                         viewModel.deleteAlert(alert)
-                                    }
+                                    },
+                                    onTurnOffClick = { viewModel.toggleAlert(alert) }
                                 )
                             }
                         }

@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.naseem.data.datasource.local.alert.AlertWeatherDao
 import com.example.naseem.data.models.entity.AlertEntity
 
-@Database(entities = [AlertEntity::class], version = 1)
+@Database(entities = [AlertEntity::class], version = 2)
 abstract class AlertDataBase :RoomDatabase() {
     abstract fun alertWeatherDao():AlertWeatherDao
 

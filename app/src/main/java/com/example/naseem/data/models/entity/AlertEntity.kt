@@ -18,4 +18,5 @@ data class AlertEntity(
     val weatherFilter: WeatherFilter,
     val latitude: Double,
     val longitude: Double,
+    val isEnabled: Boolean = true,
 )

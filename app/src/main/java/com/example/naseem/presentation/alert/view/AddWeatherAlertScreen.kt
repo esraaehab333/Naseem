@@ -99,7 +99,6 @@ fun AddWeatherAlertScreen(
             verticalArrangement = Arrangement.spacedBy(28.dp)
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-
             ScheduleAndDurationSection(
                 color = color,
                 onDateMillisChanged = { dateMillis = it },
@@ -109,42 +108,36 @@ fun AddWeatherAlertScreen(
                 onFromLabelChanged  = { fromLabel  = it },
                 onToLabelChanged    = { toLabel    = it },
             )
-
             AlertTypeSection(
                 color = color,
                 selectedType = alertType,
                 onTypeSelected = { alertType = it }
             )
-
             WeatherTriggerSection(
                 color = color,
                 onFilterSelected = { selectedFilter = it }
             )
-
             Button(
                 onClick = {
                     selectedFilter?.let { filter ->
                         val alert = WeatherAlertModel(
-                            fromTimeMillis = fromMillis,
-                            toTimeMillis   = toMillis,
-                            dateLabel      = dateLabel,
-                            fromLabel      = fromLabel,
-                            toLabel        = toLabel,
-                            alertType      = alertType,
-                            weatherFilter  = filter,
-                            latitude       = 0.0,
-                            longitude      = 0.0
+                            fromTimeMillis= fromMillis,
+                            toTimeMillis= toMillis,
+                            dateLabel= dateLabel,
+                            fromLabel= fromLabel,
+                            toLabel= toLabel,
+                            alertType= alertType,
+                            weatherFilter= filter,
+                            latitude= 0.0,
+                            longitude= 0.0
                         )
-
                         viewModel.addAlert(alert)
-
                         AlertScheduler.scheduleAlert(
-                            context     = context,
-                            triggerTime = fromMillis,
-                            message     = filter.displayName(context),
-                            alertId     = alert.createdAt
+                            context= context,
+                            triggerTime= fromMillis,
+                            message= filter.displayName(context),
+                            alertId= alert.createdAt
                         )
-
                         onBackButtonClick()
                     }
                 },
@@ -153,7 +146,7 @@ fun AddWeatherAlertScreen(
                     .fillMaxWidth()
                     .height(52.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor         = color,
+                    containerColor= color,
                     disabledContainerColor = color.copy(alpha = 0.4f)
                 ),
                 shape = RoundedCornerShape(16.dp)
@@ -169,7 +162,6 @@ fun AddWeatherAlertScreen(
                     fontSize = 14.sp
                 )
             }
-
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
