@@ -67,6 +67,7 @@ fun TriggerCard(
                 tint = iconColor
             )
         }
+
         Column(
             modifier = Modifier
                 .padding(horizontal = 10.dp)
@@ -88,6 +89,7 @@ fun TriggerCard(
                 fontSize = 10.sp,
             )
         }
+
         Switch(
             checked = isChecked,
             onCheckedChange = onCheckedChange,

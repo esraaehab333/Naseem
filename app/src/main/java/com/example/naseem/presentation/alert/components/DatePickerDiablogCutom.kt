@@ -20,7 +20,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.naseem.R
 
 @Composable
-fun TimePickerDialogCustom(
+fun DatePickerDialogCustom(
     onDismissRequest: () -> Unit,
     confirmButton: @Composable () -> Unit,
     color: Color,
@@ -31,13 +31,18 @@ fun TimePickerDialogCustom(
         properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Surface(
-            modifier = Modifier.fillMaxWidth(0.85f),
+            modifier = Modifier.fillMaxWidth(0.95f),
             shape = RoundedCornerShape(28.dp),
             color = Color.White,
             tonalElevation = 6.dp
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(
+                    start = 0.dp,
+                    end = 0.dp,
+                    top = 8.dp,
+                    bottom = 8.dp
+                ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 content()

@@ -1,5 +1,6 @@
 package com.example.naseem.presentation.fav.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
+import com.example.naseem.ui.theme.White100
 
 
 @Composable
@@ -32,7 +34,7 @@ fun EmptyStateScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp),
+            .background(White100).padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

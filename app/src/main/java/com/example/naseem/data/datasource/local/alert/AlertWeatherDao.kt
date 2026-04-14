@@ -17,4 +17,7 @@ interface AlertWeatherDao {
 
     @Query("SELECT * FROM alerts")
     fun getAllAlertWeathers(): Flow<List<AlertEntity>>
+
+    @Query("UPDATE alerts SET isEnabled = :isEnabled WHERE createdAt = :createdAt")
+    suspend fun toggleAlert(createdAt: Long, isEnabled: Boolean)
 }

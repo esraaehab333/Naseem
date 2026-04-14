@@ -1,6 +1,4 @@
 package com.example.naseem.presentation.alert.components
-
-import TimeBox
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,10 +8,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SelectableDates
@@ -32,16 +28,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.R
 import com.example.naseem.ui.theme.Black100
+import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
+import com.example.naseem.ui.theme.White100
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,44 +54,33 @@ fun ScheduleAndDurationSection(
     onFromLabelChanged: (String) -> Unit,
     onToLabelChanged: (String) -> Unit,
 ) {
-    // ── today at midnight (start of day) ────────────────────────────────────
+    val dateFormat = remember { SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()) }
     val todayMillis = remember {
-        Calendar.getInstance().apply {
+        val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        calendar.apply {
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
         }.timeInMillis
     }
-
-    val todayLabel = remember {
-        SimpleDateFormat("dd MMM, yyyy", Locale.getDefault()).format(Date(todayMillis))
-    }
-
+    val todayLabel = remember { dateFormat.format(Date(todayMillis)) }
     var showDatePicker by remember { mutableStateOf(false) }
-    var showTimePickerByFrom by remember { mutableStateOf(false) }
-    var showTimePickerByTo by remember { mutableStateOf(false) }
-
+    var showFromTimePicker by remember { mutableStateOf(false) }
+    var showToTimePicker by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf(todayLabel) }
     var fromTime by remember { mutableStateOf("08:00") }
     var fromAmPm by remember { mutableStateOf("AM") }
-    var toTime by remember { mutableStateOf("06:00") }
+    var toTime by remember { mutableStateOf("08:00") }
     var toAmPm by remember { mutableStateOf("PM") }
-
-    // default selection = today
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = todayMillis,
         selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                // allow today and any past day
-                return utcTimeMillis >= todayMillis
-            }
+            override fun isSelectableDate(utcTimeMillis: Long) = utcTimeMillis >= todayMillis
         }
     )
-
     val fromTimeState = rememberTimePickerState(initialHour = 8, initialMinute = 0)
-    val toTimeState = rememberTimePickerState(initialHour = 18, initialMinute = 0)
-
+    val toTimeState   = rememberTimePickerState(initialHour = 18, initialMinute = 0)
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -102,7 +91,7 @@ fun ScheduleAndDurationSection(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Schedule and Duration",
+                text = stringResource(R.string.schedule_and_duration),
                 fontFamily = PlusJakartaSansFontFamily,
                 fontWeight = FontWeight.Bold,
                 color = Black100,
@@ -112,7 +101,7 @@ fun ScheduleAndDurationSection(
         }
         Spacer(modifier = Modifier.height(16.dp))
         PickerField(
-            label = "DATE",
+            label = stringResource(R.string.label_date),
             value = selectedDate,
             modifier = Modifier.fillMaxWidth(),
             onClick = { showDatePicker = true }
@@ -123,157 +112,147 @@ fun ScheduleAndDurationSection(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TimeBox(
-                label = "FROM",
+                label = stringResource(R.string.label_from),
                 time = fromTime,
                 amPm = fromAmPm,
                 modifier = Modifier.weight(1f),
                 color = color,
-                onClick = { showTimePickerByFrom = true }
+                onClick = { showFromTimePicker = true }
             )
             TimeBox(
-                label = "TO",
+                label = stringResource(R.string.label_to),
                 time = toTime,
                 amPm = toAmPm,
                 modifier = Modifier.weight(1f),
                 color = color,
-                onClick = { showTimePickerByTo = true }
+                onClick = { showToTimePicker = true }
             )
         }
     }
-
-    // ── Date picker dialog ───────────────────────────────────────────────────
     if (showDatePicker) {
-        DatePickerDialog(
+        DatePickerDialogCustom(
             onDismissRequest = { showDatePicker = false },
+            color = color,
             confirmButton = {
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { millis ->
-                        val label = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault())
-                            .format(Date(millis))
+                        val label = dateFormat.format(Date(millis))
                         selectedDate = label
                         onDateMillisChanged(millis)
                         onDateLabelChanged(label)
                     }
                     showDatePicker = false
-                }) { Text("OK", color = color) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
-                    Text("Cancel", color = color.copy(alpha = 0.6f))
-                }
-            },
-            shape = RoundedCornerShape(28.dp),
-            colors = DatePickerDefaults.colors(
-                containerColor = Color.White,
-                titleContentColor = color,
-                headlineContentColor = color,
-                weekdayContentColor = Color(0xFF6B7280),
-                navigationContentColor = color,
-                yearContentColor = Color(0xFF111827),
-                currentYearContentColor = color,
-                selectedYearContentColor = Color.White,
-                selectedYearContainerColor = color,
-                dayContentColor = Color(0xFF111827),
-                disabledDayContentColor = Color(0xFF9CA3AF),
-                selectedDayContentColor = Color.White,
-                selectedDayContainerColor = color,
-                todayContentColor = color,
-                todayDateBorderColor = color,
-            )
+                }) { Text(stringResource(R.string.ok), color = color) }
+            }
         ) {
-            DatePicker(state = datePickerState)
+            DatePicker(
+                state = datePickerState,
+                modifier = Modifier.padding(horizontal = 0.dp),
+                showModeToggle = false,
+                colors = DatePickerDefaults.colors(
+                    containerColor = White100,
+                    titleContentColor = color,
+                    headlineContentColor = color,
+                    weekdayContentColor = Gray100,
+                    navigationContentColor = color,
+                    yearContentColor = Black100,
+                    currentYearContentColor = color,
+                    selectedYearContentColor = White100,
+                    selectedYearContainerColor = color,
+                    dayContentColor = Black100,
+                    disabledDayContentColor = Gray100,
+                    selectedDayContentColor = White100,
+                    selectedDayContainerColor = color,
+                    todayContentColor = color,
+                    todayDateBorderColor = color,
+                )
+            )
         }
     }
-
-    // ── From time picker ─────────────────────────────────────────────────────
-    if (showTimePickerByFrom) {
+    if (showFromTimePicker) {
         TimePickerDialogCustom(
-            onDismissRequest = { showTimePickerByFrom = false },
+            onDismissRequest = { showFromTimePicker = false },
             color = color,
             confirmButton = {
                 TextButton(onClick = {
-                    val hour = fromTimeState.hour
-                    val minute = fromTimeState.minute
-                    val displayHour = if (hour % 12 == 0) 12 else hour % 12
-                    fromTime = String.format("%02d:%02d", displayHour, minute)
-                    fromAmPm = if (hour < 12) "AM" else "PM"
-                    val cal = Calendar.getInstance().apply {
-                        set(Calendar.HOUR_OF_DAY, hour)
-                        set(Calendar.MINUTE, minute)
-                        set(Calendar.SECOND, 0)
-                        set(Calendar.MILLISECOND, 0)
-                    }
-                    onFromMillisChanged(cal.timeInMillis)
-                    onFromLabelChanged("$fromTime $fromAmPm")
-                    showTimePickerByFrom = false
-                }) { Text("OK", color = color) }
+                    val (time, amPm, millis) = resolveTime(fromTimeState.hour, fromTimeState.minute)
+                    fromTime = time
+                    fromAmPm = amPm
+                    onFromMillisChanged(millis)
+                    onFromLabelChanged("$time $amPm")
+                    showFromTimePicker = false
+                }) { Text(stringResource(R.string.ok), color = color) }
             }
         ) {
             TimePicker(
                 state = fromTimeState,
                 colors = TimePickerDefaults.colors(
                     clockDialColor = color.copy(alpha = 0.08f),
-                    clockDialSelectedContentColor = Color.White,
-                    clockDialUnselectedContentColor = Color(0xFF111827),
+                    clockDialSelectedContentColor = White100,
+                    clockDialUnselectedContentColor = Black100,
                     selectorColor = color,
-                    containerColor = Color.White,
+                    containerColor = White100,
                     periodSelectorBorderColor = color.copy(alpha = 0.3f),
                     periodSelectorSelectedContainerColor = color,
-                    periodSelectorUnselectedContainerColor = Color(0xFFF9FAFB),
-                    periodSelectorSelectedContentColor = Color.White,
-                    periodSelectorUnselectedContentColor = Color(0xFF6B7280),
+                    periodSelectorUnselectedContainerColor = White100,
+                    periodSelectorSelectedContentColor = White100,
+                    periodSelectorUnselectedContentColor = Gray100,
                     timeSelectorSelectedContainerColor = color.copy(alpha = 0.12f),
-                    timeSelectorUnselectedContainerColor = Color(0xFFF3F4F6),
+                    timeSelectorUnselectedContainerColor = White100,
                     timeSelectorSelectedContentColor = color,
-                    timeSelectorUnselectedContentColor = Color(0xFF6B7280),
+                    timeSelectorUnselectedContentColor = Gray100,
                 )
             )
         }
     }
-
-    // ── To time picker ───────────────────────────────────────────────────────
-    if (showTimePickerByTo) {
+    if (showToTimePicker) {
         TimePickerDialogCustom(
-            onDismissRequest = { showTimePickerByTo = false },
+            onDismissRequest = { showToTimePicker = false },
             color = color,
             confirmButton = {
                 TextButton(onClick = {
-                    val hour = toTimeState.hour
-                    val minute = toTimeState.minute
-                    val displayHour = if (hour % 12 == 0) 12 else hour % 12
-                    toTime = String.format("%02d:%02d", displayHour, minute)
-                    toAmPm = if (hour < 12) "AM" else "PM"
-                    val cal = Calendar.getInstance().apply {
-                        set(Calendar.HOUR_OF_DAY, hour)
-                        set(Calendar.MINUTE, minute)
-                        set(Calendar.SECOND, 0)
-                        set(Calendar.MILLISECOND, 0)
-                    }
-                    onToMillisChanged(cal.timeInMillis)
-                    onToLabelChanged("$toTime $toAmPm")
-                    showTimePickerByTo = false
-                }) { Text("OK", color = color) }
+                    val (time, amPm, millis) = resolveTime(toTimeState.hour, toTimeState.minute)
+                    toTime = time
+                    toAmPm = amPm
+                    onToMillisChanged(millis)
+                    onToLabelChanged("$time $amPm")
+                    showToTimePicker = false
+                }) { Text(stringResource(R.string.ok), color = color) }
             }
         ) {
             TimePicker(
                 state = toTimeState,
                 colors = TimePickerDefaults.colors(
                     clockDialColor = color.copy(alpha = 0.08f),
-                    clockDialSelectedContentColor = Color.White,
-                    clockDialUnselectedContentColor = Color(0xFF111827),
+                    clockDialSelectedContentColor = White100,
+                    clockDialUnselectedContentColor = Black100,
                     selectorColor = color,
-                    containerColor = Color.White,
+                    containerColor = White100,
                     periodSelectorBorderColor = color.copy(alpha = 0.3f),
                     periodSelectorSelectedContainerColor = color,
-                    periodSelectorUnselectedContainerColor = Color(0xFFF9FAFB),
-                    periodSelectorSelectedContentColor = Color.White,
-                    periodSelectorUnselectedContentColor = Color(0xFF6B7280),
+                    periodSelectorUnselectedContainerColor = White100,
+                    periodSelectorSelectedContentColor = White100,
+                    periodSelectorUnselectedContentColor = Gray100,
                     timeSelectorSelectedContainerColor = color.copy(alpha = 0.12f),
-                    timeSelectorUnselectedContainerColor = Color(0xFFF3F4F6),
+                    timeSelectorUnselectedContainerColor = White100,
                     timeSelectorSelectedContentColor = color,
-                    timeSelectorUnselectedContentColor = Color(0xFF6B7280),
+                    timeSelectorUnselectedContentColor = Gray100,
                 )
             )
         }
     }
+}
+private data class TimeResult(val time: String, val amPm: String, val millis: Long)
+
+private fun resolveTime(hour: Int, minute: Int): TimeResult {
+    val displayHour = if (hour % 12 == 0) 12 else hour % 12
+    val time = String.format("%02d:%02d", displayHour, minute)
+    val amPm = if (hour < 12) "AM" else "PM"
+    val millis = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, hour)
+        set(Calendar.MINUTE, minute)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
+    return TimeResult(time, amPm, millis)
 }

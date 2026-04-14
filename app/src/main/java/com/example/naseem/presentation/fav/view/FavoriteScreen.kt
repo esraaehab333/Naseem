@@ -4,17 +4,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.naseem.R
@@ -26,6 +23,7 @@ import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.ui.theme.White100
+import com.example.naseem.utils.NetworkUtils
 
 @Composable
 fun FavoriteScreen(
@@ -34,12 +32,53 @@ fun FavoriteScreen(
     onFloatingActionButtonClicked: () -> Unit,
     onFavDetailsClick: (Double, Double) -> Unit
 ) {
+    val context = LocalContext.current
     val state by viewModel.favoritesState.collectAsState()
+    var showNoNetworkDialog by remember { mutableStateOf(false) }
+    if (showNoNetworkDialog) {
+        AlertDialog(
+            onDismissRequest = { showNoNetworkDialog = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.no_internet_title),
+                    fontFamily = PlusJakartaSansFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    color = Black100
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.no_internet_add_fav_message),
+                    fontFamily = PlusJakartaSansFontFamily,
+                    color = Gray100
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { showNoNetworkDialog = false }) {
+                    Text(
+                        text = stringResource(R.string.ok),
+                        color = color,
+                        fontFamily = PlusJakartaSansFontFamily,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            containerColor = Color.White,
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+
     Scaffold(
         containerColor = Color.Transparent,
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onFloatingActionButtonClicked,
+                onClick = {
+                    if (NetworkUtils.isNetworkAvailable(context)) {
+                        onFloatingActionButtonClicked()
+                    } else {
+                        showNoNetworkDialog = true
+                    }
+                },
                 containerColor = color,
                 contentColor = White100,
                 shape = RoundedCornerShape(50.dp)
@@ -78,8 +117,8 @@ fun FavoriteScreen(
                 fontFamily = PlusJakartaSansFontFamily,
                 modifier = Modifier.padding(bottom = 24.dp)
             )
+
             when (state) {
-                //TODO: maybe changed later
                 is ApiState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = color)
@@ -99,8 +138,7 @@ fun FavoriteScreen(
                                 color = color
                             )
                         }
-                    }
-                    else{
+                    } else {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -113,15 +151,18 @@ fun FavoriteScreen(
                                     onDeleteClick = {
                                         viewModel.deleteFromFavorites(place)
                                     },
-                                    onClick= {
-                                        onFavDetailsClick(place.latitude, place.longitude)
+                                    onClick = {
+                                        if (NetworkUtils.isNetworkAvailable(context)) {
+                                            onFavDetailsClick(place.latitude, place.longitude)
+                                        } else {
+                                            showNoNetworkDialog = true
+                                        }
                                     }
                                 )
                             }
                         }
                     }
                 }
-                //TODO:Not handled yet
                 is ApiState.Failure -> {
                     Text(stringResource(R.string.something_went_wrong), color = Color.Red)
                 }

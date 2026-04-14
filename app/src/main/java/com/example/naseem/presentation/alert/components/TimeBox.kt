@@ -1,3 +1,5 @@
+package com.example.naseem.presentation.alert.components
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +44,7 @@ fun TimeBox(
             onClick = onClick,
             shape = RoundedCornerShape(16.dp),
             color = Gray100.copy(0.05f),
-            border = BorderStroke(1.dp,Gray100.copy(0.1f),)
+            border = BorderStroke(1.dp, Gray100.copy(0.1f))
         ) {
             Row(
                 modifier = Modifier

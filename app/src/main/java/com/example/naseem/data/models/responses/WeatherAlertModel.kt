@@ -14,7 +14,10 @@ data class WeatherAlertModel(
     val weatherFilter: WeatherFilter,
     val latitude: Double,
     val longitude: Double,
+    val isEnabled: Boolean = true,
 ) {
+    val targetTimeMillis: Long get() = fromTimeMillis
+
     constructor(entity: AlertEntity) : this(
         createdAt = entity.createdAt,
         fromTimeMillis = entity.fromTimeMillis,
@@ -26,6 +29,7 @@ data class WeatherAlertModel(
         weatherFilter = entity.weatherFilter,
         latitude = entity.latitude,
         longitude = entity.longitude,
+        isEnabled = entity.isEnabled
     )
 
     fun toEntity() = AlertEntity(
@@ -39,5 +43,6 @@ data class WeatherAlertModel(
         weatherFilter = weatherFilter,
         latitude = latitude,
         longitude = longitude,
+        isEnabled = isEnabled,
     )
 }

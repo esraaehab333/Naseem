@@ -17,9 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.naseem.R
 import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
@@ -61,8 +63,7 @@ fun PickerField(
                     color = Black100,
                 )
                 Icon(
-                    //todo:icon in R
-                    imageVector = Icons.Default.DateRange,
+                    painter = painterResource(R.drawable.ic_schedule),
                     contentDescription = null,
                     modifier = Modifier.size(18.dp),
                     tint = Gray100,

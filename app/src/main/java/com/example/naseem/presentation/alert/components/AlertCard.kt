@@ -1,23 +1,11 @@
 package com.example.naseem.presentation.alert.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,198 +19,171 @@ import com.example.naseem.data.models.responses.WeatherAlertModel
 import com.example.naseem.ui.theme.Black100
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
-import com.example.naseem.utils.WeatherFilter
-
+import com.example.naseem.utils.extensions.displayName
+import com.example.naseem.utils.extensions.icon
+import com.example.naseem.utils.getRemainingTime
 
 @Composable
 fun AlertCard(
     alert: WeatherAlertModel,
     color: Color,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onTurnOffClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val isEnabled by remember(alert.createdAt, alert.isEnabled) {
+        mutableStateOf(alert.isEnabled)
+    }
 
-    val hasTriggered = remember(alert.createdAt) {
-        context.getSharedPreferences("triggered_alerts", android.content.Context.MODE_PRIVATE)
-            .getBoolean("triggered_${alert.createdAt}", false)
+    var remainingTime by remember { mutableStateOf(getRemainingTime(alert.targetTimeMillis)) }
+    LaunchedEffect(alert.targetTimeMillis) {
+        while (true) {
+            remainingTime = getRemainingTime(alert.targetTimeMillis)
+            kotlinx.coroutines.delay(60_000L)
+        }
     }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (hasTriggered)
-                color.copy(alpha = 0.14f)
-            else
-                color.copy(alpha = 0.06f)
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(16.dp)
         ) {
-
-            // weather icon box
-            Box(
-                modifier = Modifier
-                    .size(52.dp)
-                    .background(color.copy(alpha = 0.12f), RoundedCornerShape(14.dp)),
-                contentAlignment = Alignment.Center
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    painter = painterResource(alert.weatherFilter.icon()),
-                    contentDescription = null,
-                    tint = color,
-                    modifier = Modifier.size(26.dp)
+                Text(
+                    text = if (isEnabled) "ENABLED" else "DISABLED",
+                    fontFamily = PlusJakartaSansFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (isEnabled) color else Gray100,
+                    fontSize = 10.sp,
+                    letterSpacing = 1.sp
                 )
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(Gray100.copy(alpha = 0.1f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(alert.weatherFilter.icon()),
+                        contentDescription = null,
+                        tint = if (alert.alertType == "alarm") color else Gray100,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-            Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = alert.weatherFilter.displayName(context),
+                fontFamily = PlusJakartaSansFontFamily,
+                fontWeight = FontWeight.Bold,
+                color = Black100,
+                fontSize = 16.sp
+            )
 
-                // title row + triggered chip
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Text(
-                        text = alert.weatherFilter.displayName(),
-                        fontFamily = PlusJakartaSansFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        color = Black100,
-                        fontSize = 15.sp
-                    )
-
-                    if (hasTriggered) {
-                        Box(
-                            modifier = Modifier
-                                .background(
-                                    color = Color(0xFFFF6B35).copy(alpha = 0.15f),
-                                    shape = RoundedCornerShape(6.dp)
-                                )
-                                .padding(horizontal = 6.dp, vertical = 2.dp)
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(3.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(6.dp)
-                                        .background(
-                                            Color(0xFFFF6B35),
-                                            RoundedCornerShape(50.dp)
-                                        )
-                                )
-                                Text(
-                                    text = "Triggered",
-                                    fontFamily = PlusJakartaSansFontFamily,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = Color(0xFFFF6B35),
-                                    fontSize = 9.sp
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // date row
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.padding(top = 4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_schedule),
                         contentDescription = null,
                         tint = Gray100,
-                        modifier = Modifier.size(12.dp)
+                        modifier = Modifier.size(14.dp)
                     )
                     Text(
-                        text = alert.dateLabel,
+                        text = remainingTime,
                         fontFamily = PlusJakartaSansFontFamily,
                         color = Gray100,
-                        fontSize = 12.sp
+                        fontSize = 11.sp
                     )
                 }
 
-                // time range row
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier.padding(top = 2.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_alert_type),
+                        painter = painterResource(
+                            if (alert.alertType == "alarm") R.drawable.ic_alarm_sound
+                            else R.drawable.ic_notification
+                        ),
                         contentDescription = null,
                         tint = Gray100,
-                        modifier = Modifier.size(12.dp)
+                        modifier = Modifier.size(14.dp)
                     )
                     Text(
-                        text = "${alert.fromLabel} – ${alert.toLabel}",
+                        text = if (alert.alertType == "alarm") "Alarm Sound" else "Notification Only",
                         fontFamily = PlusJakartaSansFontFamily,
                         color = Gray100,
-                        fontSize = 12.sp
+                        fontSize = 11.sp
                     )
                 }
             }
 
-            // badge + delete
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Box(
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                OutlinedButton(
+                    onClick = onDeleteClick,
                     modifier = Modifier
-                        .background(color.copy(alpha = 0.12f), RoundedCornerShape(8.dp))
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .weight(1f)
+                        .height(44.dp),
+                    shape = RoundedCornerShape(50.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = Gray100.copy(alpha = 0.1f),
+                        contentColor = Black100
+                    ),
+                    border = null
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(
-                                if (alert.alertType == "alarm") R.drawable.ic_alarm_sound
-                                else R.drawable.ic_notification
-                            ),
-                            contentDescription = null,
-                            tint = color,
-                            modifier = Modifier.size(12.dp)
-                        )
-                        Text(
-                            text = alert.alertType.replaceFirstChar { it.uppercase() },
-                            fontFamily = PlusJakartaSansFontFamily,
-                            fontWeight = FontWeight.SemiBold,
-                            color = color,
-                            fontSize = 10.sp
-                        )
-                    }
+                    Text(
+                        text = "Delete",
+                        fontFamily = PlusJakartaSansFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp
+                    )
                 }
 
-                IconButton(onClick = onDeleteClick) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_delete),
-                        contentDescription = "Delete Alert",
-                        tint = Color.Red.copy(alpha = 0.7f),
-                        modifier = Modifier.size(18.dp)
+                Button(
+                    onClick = onTurnOffClick,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(44.dp),
+                    shape = RoundedCornerShape(50.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (isEnabled) color else Gray100.copy(alpha = 0.3f),
+                        contentColor = Color.White
+                    ),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
+                ) {
+                    Text(
+                        text = if (isEnabled) "Turn Off" else "Turn On",
+                        fontFamily = PlusJakartaSansFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 12.sp
                     )
                 }
             }
         }
     }
-}
-private fun WeatherFilter.icon(): Int = when (this) {
-    WeatherFilter.RAIN         -> R.drawable.ic_rainy
-    WeatherFilter.WIND         -> R.drawable.ic_wind
-    WeatherFilter.SNOW         -> R.drawable.ic_snowy
-    WeatherFilter.THUNDERSTORM -> R.drawable.ic_thunderstorm
-}
-
-private fun WeatherFilter.displayName(): String = when (this) {
-    WeatherFilter.RAIN         -> "Heavy Rain"
-    WeatherFilter.WIND         -> "Strong Wind"
-    WeatherFilter.SNOW         -> "Snowfall"
-    WeatherFilter.THUNDERSTORM -> "Thunderstorm"
 }

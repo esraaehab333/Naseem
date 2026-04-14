@@ -66,6 +66,11 @@ class WeatherAlertViewModel(
             }
         }
     }
+    fun toggleAlert(alert: WeatherAlertModel) {
+        viewModelScope.launch {
+            repository.toggleAlert(alert.createdAt, !alert.isEnabled)
+        }
+    }
 }
 
 class WeatherAlertViewModelFactory(
