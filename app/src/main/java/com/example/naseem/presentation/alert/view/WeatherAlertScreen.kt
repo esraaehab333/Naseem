@@ -100,7 +100,6 @@ fun WeatherAlertScreen(
                         CircularProgressIndicator(color = color)
                     }
                 }
-
                 is ApiState.Success -> {
                     val alerts = (state as ApiState.Success).data
                     if (alerts.isEmpty()) {
@@ -138,7 +137,6 @@ fun WeatherAlertScreen(
                         }
                     }
                 }
-
                 is ApiState.Failure -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),

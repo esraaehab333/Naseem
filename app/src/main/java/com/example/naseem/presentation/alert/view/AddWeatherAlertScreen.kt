@@ -1,5 +1,6 @@
 package com.example.naseem.presentation.alert.view
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,9 @@ import com.example.naseem.ui.theme.White100
 import com.example.naseem.utils.WeatherFilter
 import com.example.naseem.utils.extensions.displayName
 import com.example.naseem.worker.AlertScheduler
+import com.example.naseem.worker.AlertType
+
+private const val TAG = "AddWeatherAlertScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,13 +60,13 @@ fun AddWeatherAlertScreen(
 ) {
     val context = LocalContext.current
 
-    var dateMillis    by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var fromMillis    by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var toMillis      by remember { mutableLongStateOf(System.currentTimeMillis()) }
-    var dateLabel     by remember { mutableStateOf("") }
-    var fromLabel     by remember { mutableStateOf(context.getString(R.string.default_from_time)) }
-    var toLabel       by remember { mutableStateOf(context.getString(R.string.default_to_time)) }
-    var alertType     by remember { mutableStateOf("notification") }
+    var dateMillis     by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    var fromMillis     by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    var toMillis       by remember { mutableLongStateOf(System.currentTimeMillis()) }
+    var dateLabel      by remember { mutableStateOf("") }
+    var fromLabel      by remember { mutableStateOf(context.getString(R.string.default_from_time)) }
+    var toLabel        by remember { mutableStateOf(context.getString(R.string.default_to_time)) }
+    var alertType      by remember { mutableStateOf("notification") }
     var selectedFilter by remember { mutableStateOf<WeatherFilter?>(null) }
 
     Scaffold(
@@ -100,7 +104,7 @@ fun AddWeatherAlertScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
             ScheduleAndDurationSection(
-                color = color,
+                color               = color,
                 onDateMillisChanged = { dateMillis = it },
                 onFromMillisChanged = { fromMillis = it },
                 onToMillisChanged   = { toMillis   = it },
@@ -109,44 +113,66 @@ fun AddWeatherAlertScreen(
                 onToLabelChanged    = { toLabel    = it },
             )
             AlertTypeSection(
-                color = color,
-                selectedType = alertType,
-                onTypeSelected = { alertType = it }
+                color          = color,
+                selectedType   = alertType,
+                onTypeSelected = {
+                    alertType = it
+                    Log.d(TAG, "✅ User selected alert type: $it") // LOG 1
+                }
             )
             WeatherTriggerSection(
-                color = color,
-                onFilterSelected = { selectedFilter = it }
+                color            = color,
+                onFilterSelected = {
+                    selectedFilter = it
+                    Log.d(TAG, "✅ User selected weather filter: $it") // LOG 2
+                }
             )
             Button(
                 onClick = {
                     selectedFilter?.let { filter ->
+
+                        // ← تحويل الـ string لـ AlertType enum
+                        val resolvedAlertType = if (alertType.lowercase() == "alarm") {
+                            AlertType.ALARM
+                        } else {
+                            AlertType.NOTIFICATION
+                        }
+
+                        Log.d(TAG, "🔔 Saving alert — type string: '$alertType' → resolved: $resolvedAlertType") // LOG 3
+                        Log.d(TAG, "🕐 fromMillis: $fromMillis | alertId will be: ${System.currentTimeMillis()}") // LOG 4
+
                         val alert = WeatherAlertModel(
-                            fromTimeMillis= fromMillis,
-                            toTimeMillis= toMillis,
-                            dateLabel= dateLabel,
-                            fromLabel= fromLabel,
-                            toLabel= toLabel,
-                            alertType= alertType,
-                            weatherFilter= filter,
-                            latitude= 0.0,
-                            longitude= 0.0
+                            fromTimeMillis = fromMillis,
+                            toTimeMillis   = toMillis,
+                            dateLabel      = dateLabel,
+                            fromLabel      = fromLabel,
+                            toLabel        = toLabel,
+                            alertType      = alertType,
+                            weatherFilter  = filter,
+                            latitude       = 0.0,
+                            longitude      = 0.0
                         )
+
                         viewModel.addAlert(alert)
+
+                        Log.d(TAG, "📅 Scheduling alert — id: ${alert.createdAt} | type: $resolvedAlertType | message: ${filter.displayName(context)}") // LOG 5
+
                         AlertScheduler.scheduleAlert(
-                            context= context,
-                            triggerTime= fromMillis,
-                            message= filter.displayName(context),
-                            alertId= alert.createdAt
+                            context     = context,
+                            triggerTime = fromMillis,
+                            message     = filter.displayName(context),
+                            alertId     = alert.createdAt,
+                            alertType   = resolvedAlertType // ← ده اللي كان ناقص
                         )
                         onBackButtonClick()
                     }
                 },
-                enabled = selectedFilter != null,
+                enabled  = selectedFilter != null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor= color,
+                    containerColor         = color,
                     disabledContainerColor = color.copy(alpha = 0.4f)
                 ),
                 shape = RoundedCornerShape(16.dp)
@@ -156,10 +182,10 @@ fun AddWeatherAlertScreen(
                         stringResource(R.string.select_weather_trigger)
                     else
                         stringResource(R.string.save_alert),
-                    color = White100,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = PlusJakartaSansFontFamily,
-                    fontSize = 14.sp
+                    color       = White100,
+                    fontWeight  = FontWeight.SemiBold,
+                    fontFamily  = PlusJakartaSansFontFamily,
+                    fontSize    = 14.sp
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))

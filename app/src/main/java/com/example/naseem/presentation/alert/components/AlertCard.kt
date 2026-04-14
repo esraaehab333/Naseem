@@ -21,28 +21,8 @@ import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.PlusJakartaSansFontFamily
 import com.example.naseem.utils.extensions.displayName
 import com.example.naseem.utils.extensions.icon
-import java.util.concurrent.TimeUnit
+import com.example.naseem.utils.getRemainingTime
 
-fun getRemainingTime(targetDateMillis: Long): String {
-    val now = System.currentTimeMillis()
-    val diff = targetDateMillis - now
-    return when {
-        diff <= 0 -> "Expired"
-        diff < TimeUnit.HOURS.toMillis(1) -> {
-            val mins = TimeUnit.MILLISECONDS.toMinutes(diff)
-            "${mins}m remaining"
-        }
-        diff < TimeUnit.DAYS.toMillis(1) -> {
-            val hours = TimeUnit.MILLISECONDS.toHours(diff)
-            val mins = TimeUnit.MILLISECONDS.toMinutes(diff) % 60
-            "${hours}h ${mins}m remaining"
-        }
-        else -> {
-            val days = TimeUnit.MILLISECONDS.toDays(diff)
-            "${days}d remaining"
-        }
-    }
-}
 @Composable
 fun AlertCard(
     alert: WeatherAlertModel,
