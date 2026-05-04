@@ -38,12 +38,5 @@ fun Next7DaysForecastButton(modifier: Modifier, color: Color,onNext7DaysClick: (
             fontSize = 12.sp,
             color = color
         )
-
-        Icon(
-            painter = painterResource(R.drawable.ic_arrow),
-            contentDescription = null,
-            tint = color,
-            modifier = Modifier.size(10.dp)
-        )
     }
 }

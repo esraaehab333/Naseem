@@ -124,7 +124,7 @@ class AlarmForegroundService : Service() {
     ): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_alert_type)
-            .setContentTitle("🔔 Naseem Weather Alarm")
+            .setContentTitle("Naseem Weather")
             .setContentText(message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setPriority(NotificationCompat.PRIORITY_MAX)

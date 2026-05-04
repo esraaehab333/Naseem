@@ -93,7 +93,7 @@ class WeatherAlertWorker(
 
         val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID_NOTIFICATION)
             .setSmallIcon(R.drawable.ic_alert_type)
-            .setContentTitle("🌤 Naseem Weather Alert")
+            .setContentTitle("Naseem Weather")
             .setContentText(message)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

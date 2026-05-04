@@ -4,7 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,12 +27,60 @@ fun WeatherCard(
     place: FavoriteModel,
     color: Color,
     onDeleteClick: () -> Unit,
-    onClick:()->Unit,
+    onClick: () -> Unit,
 ) {
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.delete_confirm_title),
+                    fontFamily = PlusJakartaSansFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    color = Black100
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.delete_confirm_message, place.cityName),
+                    fontFamily = PlusJakartaSansFontFamily,
+                    color = Gray100
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        onDeleteClick()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete),
+                        color = Color.Red,
+                        fontFamily = PlusJakartaSansFontFamily,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        color = color,
+                        fontFamily = PlusJakartaSansFontFamily,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            containerColor = Color.White,
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
     OutlinedCard(
-        modifier = Modifier.fillMaxWidth().clickable {
-            onClick()
-        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.outlinedCardColors(containerColor = White100),
         border = CardDefaults.outlinedCardBorder().copy(
@@ -85,7 +133,7 @@ fun WeatherCard(
                 )
             }
 
-            IconButton(onClick = onDeleteClick) {
+            IconButton(onClick = { showDeleteDialog = true }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_delete),
                     contentDescription = stringResource(R.string.delete),

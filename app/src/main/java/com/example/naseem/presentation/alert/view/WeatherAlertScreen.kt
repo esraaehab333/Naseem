@@ -131,7 +131,6 @@ fun WeatherAlertScreen(
                                         AlertScheduler.cancelAlert(context, alert.createdAt)
                                         viewModel.deleteAlert(alert)
                                     },
-                                    onTurnOffClick = { viewModel.toggleAlert(alert) }
                                 )
                             }
                         }

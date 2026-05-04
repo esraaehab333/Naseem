@@ -2,11 +2,12 @@ package com.example.naseem.presentation.fav.components
 
 import android.graphics.Color
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.naseem.R
-import com.example.naseem.utils.DrawableHelper
+import com.example.naseem.utils.extensions.DrawableHelper
 import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -26,6 +27,7 @@ fun MapSection(
     val myLocationLabel = stringResource(R.string.my_location)
     val selectedLocationLabel = stringResource(R.string.selected_location)
 
+    val onLocationSelectedRef = rememberUpdatedState(onLocationSelected)
     AndroidView(
         factory = { ctx ->
             val mapView = MapView(ctx).apply {
@@ -40,15 +42,15 @@ fun MapSection(
                     p?.let {
                         mapView.controller.animateTo(it)
                         mapView.controller.setZoom(18.0)
-                        onLocationSelected(it)
+                        onLocationSelectedRef.value(it)
                     }
                     return true
                 }
                 override fun longPressHelper(p: GeoPoint?): Boolean = false
             })
 
-            mapView.tag = mapEventsOverlay
             mapView.overlays.add(mapEventsOverlay)
+            mapView.tag = mapEventsOverlay
             mapView
         },
 
@@ -56,15 +58,20 @@ fun MapSection(
 
         update = { view ->
             val savedOverlay = view.tag as? MapEventsOverlay
-            view.overlays.clear()
-            savedOverlay?.let { view.overlays.add(it) }
+            view.overlays.removeAll { it is Marker }
+            if (savedOverlay != null && !view.overlays.contains(savedOverlay)) {
+                view.overlays.add(0, savedOverlay)
+            }
+
             if (selectedLocation == null) {
                 currentLocation?.let { point ->
                     val marker = Marker(view).apply {
                         position = point
                         setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                         title = myLocationLabel
-                        icon = DrawableHelper.resizeDrawable(view.context, R.drawable.ic_location_soild, 70, 100, Color.RED)
+                        icon = DrawableHelper.resizeDrawable(
+                            view.context, R.drawable.ic_location_soild, 70, 100, Color.RED
+                        )
                     }
                     view.overlays.add(marker)
                 }
@@ -74,7 +81,9 @@ fun MapSection(
                     position = point
                     setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
                     title = selectedLocationLabel
-                    icon = DrawableHelper.resizeDrawable(view.context, R.drawable.ic_location_soild, 70, 100, Color.RED)
+                    icon = DrawableHelper.resizeDrawable(
+                        view.context, R.drawable.ic_location_soild, 70, 100, Color.RED
+                    )
                 }
                 view.overlays.add(marker)
             }

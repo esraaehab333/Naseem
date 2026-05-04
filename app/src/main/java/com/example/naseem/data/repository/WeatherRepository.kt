@@ -59,7 +59,4 @@ class WeatherRepository(
     fun getAllAlertWeather(): Flow<List<AlertEntity>> {
         return alertLocalDataSource.getAllAlertWeather()
     }
-    suspend fun toggleAlert(createdAt: Long, isEnabled: Boolean) {
-        alertLocalDataSource.toggleAlertWeather(createdAt, isEnabled)
-    }
 }
