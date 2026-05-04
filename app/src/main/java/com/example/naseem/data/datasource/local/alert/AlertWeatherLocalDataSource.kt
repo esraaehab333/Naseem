@@ -19,7 +19,4 @@ class AlertWeatherLocalDataSource(context: Context) {
     fun getAllAlertWeather(): Flow<List<AlertEntity>> {
         return alertWeatherDao.getAllAlertWeathers()
     }
-    suspend fun toggleAlertWeather(createdAt: Long, isEnabled: Boolean) {
-        alertWeatherDao.toggleAlert(createdAt, isEnabled)
-    }
 }

@@ -1,4 +1,4 @@
-package com.example.naseem.utils
+package com.example.naseem.utils.extensions
 
 import android.content.Context
 import android.graphics.Bitmap

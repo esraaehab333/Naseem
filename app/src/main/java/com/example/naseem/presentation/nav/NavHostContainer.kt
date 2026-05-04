@@ -18,6 +18,7 @@ import com.example.naseem.presentation.fav.view.AddFavoritePlaceScreen
 import com.example.naseem.presentation.fav.viewModels.FavoriteViewModel
 import com.example.naseem.presentation.home.view.HomeScreen
 import com.example.naseem.presentation.home.viewModels.HomeViewModel
+import com.example.naseem.presentation.settings.view.SettingsMapScreen
 import com.example.naseem.presentation.settings.viewModel.SettingsViewModel
 import com.example.naseem.utils.Routes
 
@@ -87,11 +88,18 @@ fun NavHostContainer(
                 )
             }
             composable(Routes.SETTINGS) {
-
                 SettingsScreen(
-                    settingsViewModel = settingsViewModel,
                     color = color,
-                    onLanguageChange = onLanguageChange
+                    onLanguageChange = onLanguageChange,
+                    settingsViewModel = settingsViewModel,
+                    onNavigateToSettingsMap = { navController.navigate(Routes.SETTINGSMAP) }  // ← add
+                )
+            }
+            composable(Routes.SETTINGSMAP) {
+                SettingsMapScreen(
+                    color = color,
+                    settingsViewModel = settingsViewModel,
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable(Routes.NEXT7DAYS) {

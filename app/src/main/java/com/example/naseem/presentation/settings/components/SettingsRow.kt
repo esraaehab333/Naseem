@@ -55,9 +55,7 @@ fun SettingsRow(
                 modifier = Modifier.size(16.dp)
             )
         }
-
         Spacer(modifier = Modifier.width(10.dp))
-
         Text(
             text = title,
             fontFamily = PlusJakartaSansFontFamily,
@@ -66,7 +64,6 @@ fun SettingsRow(
             fontSize = 14.sp,
             modifier = Modifier.weight(1f)
         )
-        // in case it navigate to map screen
         trailingContent()
     }
 }

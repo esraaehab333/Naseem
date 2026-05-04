@@ -1,7 +1,7 @@
-package com.example.naseem.utils
+package com.example.naseem.presentation.nav
 
 data class BottomNavItem (
-    val label: String,
+    val label: Int,
     val icon: Int,
     val route:String
 )

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,19 +29,68 @@ fun AlertCard(
     alert: WeatherAlertModel,
     color: Color,
     onDeleteClick: () -> Unit,
-    onTurnOffClick: () -> Unit
 ) {
     val context = LocalContext.current
     val isEnabled by remember(alert.createdAt, alert.isEnabled) {
         mutableStateOf(alert.isEnabled)
     }
 
+    var showDeleteDialog by remember { mutableStateOf(false) }
     var remainingTime by remember { mutableStateOf(getRemainingTime(alert.targetTimeMillis)) }
+
     LaunchedEffect(alert.targetTimeMillis) {
         while (true) {
             remainingTime = getRemainingTime(alert.targetTimeMillis)
             kotlinx.coroutines.delay(60_000L)
         }
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.delete_alert_confirm_title),
+                    fontFamily = PlusJakartaSansFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    color = Black100
+                )
+            },
+            text = {
+                Text(
+                    text = stringResource(R.string.delete_alert_confirm_message),
+                    fontFamily = PlusJakartaSansFontFamily,
+                    color = Gray100
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        onDeleteClick()
+                    }
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete),
+                        color = Color.Red,
+                        fontFamily = PlusJakartaSansFontFamily,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(
+                        text = stringResource(R.string.cancel),
+                        color = color,
+                        fontFamily = PlusJakartaSansFontFamily,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            containerColor = Color.White,
+            shape = RoundedCornerShape(16.dp)
+        )
     }
 
     Card(
@@ -60,7 +110,7 @@ fun AlertCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (isEnabled) "ENABLED" else "DISABLED",
+                    text = if (isEnabled) stringResource(R.string.enabled) else stringResource(R.string.disabled),
                     fontFamily = PlusJakartaSansFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     color = if (isEnabled) color else Gray100,
@@ -130,7 +180,10 @@ fun AlertCard(
                         modifier = Modifier.size(14.dp)
                     )
                     Text(
-                        text = if (alert.alertType == "alarm") "Alarm Sound" else "Notification Only",
+                        text = if (alert.alertType == "alarm")
+                            stringResource(R.string.alarm_sound)
+                        else
+                            stringResource(R.string.notification_only),
                         fontFamily = PlusJakartaSansFontFamily,
                         color = Gray100,
                         fontSize = 11.sp
@@ -145,7 +198,7 @@ fun AlertCard(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 OutlinedButton(
-                    onClick = onDeleteClick,
+                    onClick = { showDeleteDialog = true },
                     modifier = Modifier
                         .weight(1f)
                         .height(44.dp),
@@ -157,27 +210,7 @@ fun AlertCard(
                     border = null
                 ) {
                     Text(
-                        text = "Delete",
-                        fontFamily = PlusJakartaSansFontFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp
-                    )
-                }
-
-                Button(
-                    onClick = onTurnOffClick,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(44.dp),
-                    shape = RoundedCornerShape(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isEnabled) color else Gray100.copy(alpha = 0.3f),
-                        contentColor = Color.White
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
-                ) {
-                    Text(
-                        text = if (isEnabled) "Turn Off" else "Turn On",
+                        text = stringResource(R.string.delete),
                         fontFamily = PlusJakartaSansFontFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp

@@ -85,8 +85,19 @@
     <string name="thunderstorm_subtitle">كشف في نطاق 50 كم</string>
     <string name="triggered">تم التفعيل</string>
     <string name="delete_alert">حذف التنبيه</string>
-    <string name="no_internet_title">No Internet Connection</string>
-    <string name="no_internet_add_fav_message">You need an internet connection to add a favorite location.</string>
-    <string name="no_internet_home_message">Please check your connection and try again.</string>
+    <string name="no_internet_title">لا يوجد اتصال بالإنترنت</string>
+    <string name="no_internet_add_fav_message">تحتاج إلى اتصال بالإنترنت لإضافة موقع مفضل.</string>
+    <string name="no_internet_home_message">يرجى التحقق من اتصالك والمحاولة مرة أخرى.</string>
     <string name="alerts_empty_subtitle">كل شيء على ما يرام! لا توجد تنبيهات طقس نشطة الآن</string>
+    <string name="home">الرئيسية</string>
+    <string name="alerts">التنبيهات</string>
+    <string name="favorite">المفضلة</string>
+    <string name="delete_confirm_title">حذف المكان</string>
+    <string name="delete_confirm_message">هل أنت متأكد أنك تريد حذف %1$s من أماكنك المحفوظة؟</string>
+    <string name="delete_alert_confirm_title">حذف التنبيه</string>
+    <string name="delete_alert_confirm_message">هل أنت متأكد أنك تريد حذف هذا التنبيه؟</string>
+    <string name="enabled">مفعّل</string>
+    <string name="disabled">معطّل</string>
+    <string name="alarm_sound">صوت المنبه</string>
+    <string name="notification_only">إشعار فقط</string>
 </resources>

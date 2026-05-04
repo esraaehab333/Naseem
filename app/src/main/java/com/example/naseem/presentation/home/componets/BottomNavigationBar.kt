@@ -16,12 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.naseem.utils.Constants
+import com.example.naseem.presentation.nav.Constants
 import com.example.naseem.ui.theme.Gray100
 import com.example.naseem.ui.theme.White100
 
@@ -59,13 +60,13 @@ fun BottomNavigationBar(navController: NavHostController, color: Color) {
                     icon = {
                         Icon(
                             painter = painterResource(navItem.icon),
-                            contentDescription = navItem.label,
+                            contentDescription = stringResource(navItem.label),
                             modifier = Modifier.size(22.dp).padding(2.dp)
                         )
                     },
                     label = {
                         Text(
-                            text = navItem.label,
+                            text = stringResource(navItem.label),
                             fontSize = 11.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                         )

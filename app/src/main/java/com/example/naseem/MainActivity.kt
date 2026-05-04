@@ -54,15 +54,21 @@ class MainActivity : ComponentActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         requestPermissionsLauncher =
             registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                val notificationGranted =
-                    permissions[android.Manifest.permission.POST_NOTIFICATIONS] ?: false
-                val locationGranted =
-                    permissions[android.Manifest.permission.ACCESS_FINE_LOCATION] ?: false
-                if (!notificationGranted || !locationGranted) {
-                    finish()
+                val deniedPermissions = permissions.filter { !it.value }.keys.toTypedArray()
+                if (deniedPermissions.isNotEmpty()) {
+                    val canAskAgain = deniedPermissions.any { shouldShowRequestPermissionRationale(it) }
+                    if (canAskAgain) {
+                        requestPermissionsLauncher.launch(deniedPermissions)
+                    } else {
+                        val intent = android.content.Intent(
+                            android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            android.net.Uri.fromParts("package", packageName, null)
+                        )
+                        startActivity(intent)
+                        finish()
+                    }
                 }
             }
         checkPermissions()
@@ -95,7 +101,8 @@ class MainActivity : ComponentActivity() {
                         if (currentRoute != Routes.NEXT7DAYS &&
                             currentRoute != Routes.ADDFAVORITEPLACE &&
                             currentRoute != Routes.ADDWEATHERALERT&&
-                            currentRoute!= Routes.FAVDETAILSHOME
+                            currentRoute!= Routes.FAVDETAILSHOME&&
+                            currentRoute != Routes.SETTINGSMAP
                         ) {
                             BottomNavigationBar(
                                 navController = navController,
@@ -127,15 +134,12 @@ class MainActivity : ComponentActivity() {
     }
     private fun checkPermissions() {
         val permissions = mutableListOf<String>()
-
         if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(android.Manifest.permission.POST_NOTIFICATIONS)
         }
-
         if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             permissions.add(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
-
         if (permissions.isNotEmpty()) {
             requestPermissionsLauncher.launch(permissions.toTypedArray())
         }
